@@ -1,5 +1,11 @@
+import StudyMode from './components/StudyMode.jsx';
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <StudyMode />
+    </>
+  );
 }
 
 export default App;
