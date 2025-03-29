@@ -12,6 +12,7 @@ export default function KanjiCard({ kanji }) {
       >
         <div className={styles.front}>{kanji.value}</div>
         <div className={styles.back}>
+          {/* korean 표시 */}
           <div className={styles.korean}>
             {kanji.korean.map((item, i) => (
               <div key={i}>
@@ -19,11 +20,22 @@ export default function KanjiCard({ kanji }) {
               </div>
             ))}
           </div>
-          <p className={styles.on}>
+          {/* 음 (onyomi) 표시 */}
+          <p
+            className={`${styles.on} ${
+              kanji.onyomi.length === 0 ? styles.hidden : ''
+            }`}
+          >
             <span className={styles.label}>음</span>
             <span className={styles.value}>{kanji.onyomi.join(', ')}</span>
           </p>
-          <p className={styles.kun}>
+
+          {/* 훈 (kunyomi) 표시 */}
+          <p
+            className={`${styles.kun} ${
+              kanji.kunyomi.length === 0 ? styles.hidden : ''
+            }`}
+          >
             <span className={styles.label}>훈</span>
             <span className={styles.value}>{kanji.kunyomi.join(', ')}</span>
           </p>
