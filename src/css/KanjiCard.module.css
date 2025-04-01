@@ -62,7 +62,8 @@
 }
 
 .on,
-.kun {
+.kun,
+.tra {
   display: flex;
   align-items: baseline;
 }

@@ -20,24 +20,39 @@ export default function KanjiCard({ kanji }) {
               </div>
             ))}
           </div>
-          {/* 음 (onyomi) 표시 */}
-          <p
-            className={`${styles.on} ${
-              kanji.onyomi.length === 0 ? styles.hidden : ''
-            }`}
-          >
-            <span className={styles.label}>음</span>
-            <span className={styles.value}>{kanji.onyomi.join(', ')}</span>
-          </p>
-
+          {/* TODO: 음과 훈의 코드를 컴포넌트로 빼거나 동일한 로직 재사용이 가능한지 검토 */}
           {/* 훈 (kunyomi) 표시 */}
           <p
             className={`${styles.kun} ${
-              kanji.kunyomi.length === 0 ? styles.hidden : ''
+              !kanji.kunyomi.length ? styles.hidden : ''
             }`}
           >
             <span className={styles.label}>훈</span>
-            <span className={styles.value}>{kanji.kunyomi.join(', ')}</span>
+            <span className={styles.value}>
+              {kanji.kunyomi.join(', ') || ''}
+            </span>
+          </p>
+
+          {/* 음 (onyomi) 표시 */}
+          <p
+            className={`${styles.on} ${
+              !kanji.onyomi.length ? styles.hidden : ''
+            }`}
+          >
+            <span className={styles.label}>음</span>
+            <span className={styles.value}>
+              {kanji.onyomi.join(', ') || ''}
+            </span>
+          </p>
+
+          {/* 정자체 (traditionalForm) 표시 */}
+          <p
+            className={`${styles.tra} ${
+              !kanji.traditionalForm ? styles.hidden : ''
+            }`}
+          >
+            <span className={styles.label}>정자체</span>
+            <span className={styles.value}>{kanji.traditionalForm || ''}</span>
           </p>
         </div>
       </div>
