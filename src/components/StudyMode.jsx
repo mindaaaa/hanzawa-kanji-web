@@ -1,30 +1,27 @@
 import KanjiCard from './KanjiCard.jsx';
 import styles from '../css/StudyMode.module.css';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { getKanjiUrl } from '../constants/getKanjiUrl.js';
 
 export default function StudyMode() {
   // 1. 상태 관리 (items, cursor, loading)
   const [items, setItems] = useState([]);
-  const [cursor, setCursor] = useState(null); // TODO: 이미 마지막 cursor는 null이므로  if (cursor === null && items.length === 2136) return; 수정하자
+  const [cursor, setCursor] = useState(undefined);
   const [loading, setLoading] = useState(false);
 
   const observer = useRef(); /* DOM 요소에 접근해야하므로 */
 
   // 2. fetch 함수
-  const fetchKanji = async (nextCursor = null) => {
-    const isLastPage = () => cursor === null && items.length === 2136;
+  const fetchKanji = async () => {
+    const isLastPage = () => cursor === null;
     if (isLastPage()) return;
     if (loading) return;
 
     setLoading(true);
 
     try {
-      const base = 'http://localhost:40324/api/v1/hanzawa-kanji?quizId=yyy';
-      const url = nextCursor ? `${base}&cursor=${nextCursor}` : base;
+      const url = getKanjiUrl({ quizId: 'yyy', cursor });
 
-      // const res = await fetch(url).then((res) => res.json);
-      // const data = await res.json();
-      // 위 코드는 아래와 같다. thenable에 대한 이해가 있어야 함!
       const data = await fetch(url).then((res) => res.json());
 
       setItems((prev) => {
@@ -38,7 +35,7 @@ export default function StudyMode() {
     } catch (error) {
       console.error('데이터 불러오기 실패👀', error);
       setItems([]);
-      setCursor(null);
+      setCursor(undefined);
     } finally {
       setLoading(false);
     }
