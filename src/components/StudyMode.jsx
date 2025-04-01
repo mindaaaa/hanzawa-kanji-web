@@ -25,10 +25,10 @@ export default function StudyMode() {
       const data = await fetch(url).then((res) => res.json());
 
       setItems((prev) => {
-        // TODO: filter 안에 들어간 함수를 별도의 함수로 뺴자
-        const newItems = data.items.filter(
-          (newItem) => !prev.some((prevItem) => prevItem.id === newItem.id)
-        );
+        const isNew = (newItem) =>
+          !prev.some((prevItem) => prevItem.id === newItem.id);
+
+        const newItems = data.items.filter(isNew);
         return [...prev, ...newItems];
       });
       setCursor(data.cursor);
