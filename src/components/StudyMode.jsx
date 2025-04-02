@@ -1,7 +1,8 @@
 import KanjiCard from './KanjiCard.jsx';
 import styles from '../css/StudyMode.module.css';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getKanjiUrl } from '../constants/getKanjiUrl.js';
+import { FixedSizeGrid, FixedSizeGrid as Grid } from 'react-window';
 
 export default function StudyMode() {
   // 1. 상태 관리 (items, cursor, loading)
@@ -9,7 +10,10 @@ export default function StudyMode() {
   const [cursor, setCursor] = useState(undefined);
   const [loading, setLoading] = useState(false);
 
-  const observer = useRef(); /* DOM 요소에 접근해야하므로 */
+  const CARD_WIDTH = 200;
+  const CARD_HEIGHT = 260;
+  const COLUMN_COUNT = 6;
+  const rowCount = Math.ceil(items.length / COLUMN_COUNT);
 
   // 2. fetch 함수
   const fetchKanji = async () => {
@@ -21,7 +25,6 @@ export default function StudyMode() {
 
     try {
       const url = getKanjiUrl({ quizId: 'yyy', cursor });
-
       const data = await fetch(url).then((res) => res.json());
 
       setItems((prev) => {
@@ -41,40 +44,38 @@ export default function StudyMode() {
     }
   };
 
-  // 3. observer 연결 함수
-  const lastItemRef = useCallback(
-    (node) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && cursor) {
-          fetchKanji(cursor);
-        }
-      });
-
-      if (node) observer.current.observe(node);
-    },
-    [cursor, loading]
-  );
-
-  // 4. useEffect 초기 fetch
+  // 3. useEffect 초기 fetch
   useEffect(() => {
-    fetchKanji(cursor);
+    fetchKanji();
   }, []);
 
-  // 5. return (마지막 요소에 ref 연결)
+  // 4. react-window
   return (
-    <div className={styles.list}>
-      {items.map((kanji, index) => {
-        const isLast = index === items.length - 1;
+    <FixedSizeGrid
+      className={styles.list}
+      columnCount={COLUMN_COUNT}
+      rowCount={rowCount}
+      columnWidth={CARD_WIDTH}
+      rowHeight={CARD_HEIGHT}
+      width={CARD_WIDTH * COLUMN_COUNT + 200} // 여유 padding
+      height={1024}
+      onItemsRendered={({ visibleRowStopIndex }) => {
+        if (visibleRowStopIndex >= rowCount - 1) {
+          fetchKanji();
+        }
+      }}
+    >
+      {({ columnIndex, rowIndex, style }) => {
+        const index = rowIndex * COLUMN_COUNT + columnIndex;
+        const kanji = items[index];
+        if (!kanji) return null;
+
         return (
-          <div ref={isLast ? lastItemRef : null} key={kanji.id}>
+          <div style={style} key={kanji.id}>
             <KanjiCard kanji={kanji} />
           </div>
         );
-      })}
-      {loading && <p>로딩 중...</p>}
-    </div>
+      }}
+    </FixedSizeGrid>
   );
 }
