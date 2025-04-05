@@ -66,31 +66,38 @@ export default function StudyMode() {
   }, []);
 
   return (
-    <FixedSizeGrid
-      className={styles.list}
-      columnCount={COLUMN_COUNT}
-      rowCount={rowCount}
-      columnWidth={CARD_WIDTH}
-      rowHeight={CARD_HEIGHT}
-      width={windowSize.width}
-      height={windowSize.height}
-      onItemsRendered={({ visibleRowStopIndex }) => {
-        if (visibleRowStopIndex >= rowCount - 1) {
-          fetchKanji();
-        }
-      }}
-    >
-      {({ columnIndex, rowIndex, style }) => {
-        const index = rowIndex * COLUMN_COUNT + columnIndex;
-        const kanji = items[index];
-        if (!kanji) return null;
+    <>
+      <FixedSizeGrid
+        className={styles.list}
+        columnCount={COLUMN_COUNT}
+        rowCount={rowCount}
+        columnWidth={CARD_WIDTH}
+        rowHeight={CARD_HEIGHT}
+        width={windowSize.width}
+        height={windowSize.height}
+        onItemsRendered={({ visibleRowStopIndex }) => {
+          if (
+            visibleRowStopIndex >= rowCount - 1 &&
+            !loading &&
+            cursor !== null
+          ) {
+            fetchKanji();
+          }
+        }}
+      >
+        {({ columnIndex, rowIndex, style }) => {
+          const index = rowIndex * COLUMN_COUNT + columnIndex;
+          const kanji = items[index];
+          if (!kanji) return null;
 
-        return (
-          <div style={style} key={kanji.id}>
-            <KanjiCard kanji={kanji} />
-          </div>
-        );
-      }}
-    </FixedSizeGrid>
+          return (
+            <div style={style} key={kanji.id}>
+              <KanjiCard kanji={kanji} />
+            </div>
+          );
+        }}
+      </FixedSizeGrid>
+      {loading && <p className={styles.loading}>로딩 중...</p>}
+    </>
   );
 }
