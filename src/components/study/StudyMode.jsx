@@ -1,7 +1,7 @@
-import KanjiCard from './KanjiCard.jsx';
-import styles from '../css/StudyMode.module.css';
+import KanjiCard from '../KanjiCard.jsx';
+import styles from '../../css/StudyMode.module.css';
 import React, { useEffect, useState } from 'react';
-import { getKanjiUrl } from '../constants/getKanjiUrl.js';
+import { getKanjiUrl } from '../../constants/getKanjiUrl.js';
 import { FixedSizeGrid } from 'react-window';
 
 export default function StudyMode() {
