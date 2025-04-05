@@ -5,24 +5,33 @@ import { getKanjiUrl } from '../constants/getKanjiUrl.js';
 import { FixedSizeGrid } from 'react-window';
 
 export default function StudyMode() {
-  const [items, setItems] = useState([]);
-  const [cursor, setCursor] = useState(undefined);
-  const [loading, setLoading] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
   const CARD_WIDTH = 220;
   const CARD_HEIGHT = 300;
 
-  // 1. 열 개수 계산
-  const COLUMN_COUNT = Math.max(1, Math.floor(windowWidth / CARD_WIDTH));
-  const rowCount = Math.ceil(items.length / COLUMN_COUNT);
+  const [items, setItems] = useState([]);
+  const [cursor, setCursor] = useState(undefined);
+  const [loading, setLoading] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
-  // 2. resize 이벤트 등록 (TODO: resize 최적화)
+  // 1. resize 이벤트 등록 (TODO: resize 최적화)
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  });
+  }, []);
+
+  // 2. 열 개수 계산
+  const COLUMN_COUNT = Math.max(1, Math.floor(windowSize.width / CARD_WIDTH));
+  const rowCount = Math.ceil(items.length / COLUMN_COUNT);
 
   const fetchKanji = async () => {
     const isLastPage = () => cursor === null;
@@ -63,8 +72,8 @@ export default function StudyMode() {
       rowCount={rowCount}
       columnWidth={CARD_WIDTH}
       rowHeight={CARD_HEIGHT}
-      width={windowWidth - 40} // 여유 padding
-      height={window.innerHeight - 80}
+      width={windowSize.width}
+      height={windowSize.height}
       onItemsRendered={({ visibleRowStopIndex }) => {
         if (visibleRowStopIndex >= rowCount - 1) {
           fetchKanji();
