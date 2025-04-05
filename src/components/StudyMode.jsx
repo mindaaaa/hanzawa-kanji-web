@@ -2,20 +2,28 @@ import KanjiCard from './KanjiCard.jsx';
 import styles from '../css/StudyMode.module.css';
 import React, { useEffect, useState } from 'react';
 import { getKanjiUrl } from '../constants/getKanjiUrl.js';
-import { FixedSizeGrid, FixedSizeGrid as Grid } from 'react-window';
+import { FixedSizeGrid } from 'react-window';
 
 export default function StudyMode() {
-  // 1. 상태 관리 (items, cursor, loading)
   const [items, setItems] = useState([]);
   const [cursor, setCursor] = useState(undefined);
   const [loading, setLoading] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const CARD_WIDTH = 200;
-  const CARD_HEIGHT = 260;
-  const COLUMN_COUNT = 6;
+  const CARD_WIDTH = 220;
+  const CARD_HEIGHT = 300;
+
+  // 1. 열 개수 계산
+  const COLUMN_COUNT = Math.max(1, Math.floor(windowWidth / CARD_WIDTH));
   const rowCount = Math.ceil(items.length / COLUMN_COUNT);
 
-  // 2. fetch 함수
+  // 2. resize 이벤트 등록 (TODO: resize 최적화)
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  });
+
   const fetchKanji = async () => {
     const isLastPage = () => cursor === null;
     if (isLastPage()) return;
@@ -44,12 +52,10 @@ export default function StudyMode() {
     }
   };
 
-  // 3. useEffect 초기 fetch
   useEffect(() => {
     fetchKanji();
   }, []);
 
-  // 4. react-window
   return (
     <FixedSizeGrid
       className={styles.list}
@@ -57,8 +63,8 @@ export default function StudyMode() {
       rowCount={rowCount}
       columnWidth={CARD_WIDTH}
       rowHeight={CARD_HEIGHT}
-      width={CARD_WIDTH * COLUMN_COUNT + 200} // 여유 padding
-      height={1024}
+      width={windowWidth - 40} // 여유 padding
+      height={window.innerHeight - 80}
       onItemsRendered={({ visibleRowStopIndex }) => {
         if (visibleRowStopIndex >= rowCount - 1) {
           fetchKanji();
