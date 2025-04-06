@@ -21,12 +21,12 @@ export default function KanjiCard({ kanji }) {
               </div>
             ))}
           </div>
-          <ReadingRow type='kun' label='훈' value={kanji.kunyomi || ''} />
-          <ReadingRow type='on' label='음' value={kanji.onyomi || ''} />
+          <ReadingRow type='kun' label='훈' value={kanji.kunyomi || []} />
+          <ReadingRow type='on' label='음' value={kanji.onyomi || []} />
           <ReadingRow
             type='tra'
             label='정자체'
-            value={kanji.traditionalForm || ''}
+            value={kanji.traditionalForm ? [kanji.traditionalForm] : []}
           />
         </div>
       </div>

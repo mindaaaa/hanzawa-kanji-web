@@ -31,7 +31,7 @@ export default function StudyMode() {
 
   // 2. 열 개수 계산
   const COLUMN_COUNT = Math.max(1, Math.floor(windowSize.width / CARD_WIDTH));
-  const rowCount = Math.ceil(items.length / COLUMN_COUNT);
+  const ROW_COUNT = Math.ceil(items.length / COLUMN_COUNT);
 
   const fetchKanji = async () => {
     const isLastPage = () => cursor === null;
@@ -70,17 +70,20 @@ export default function StudyMode() {
       <FixedSizeGrid
         className={styles.list}
         columnCount={COLUMN_COUNT}
-        rowCount={rowCount}
+        rowCount={ROW_COUNT}
         columnWidth={CARD_WIDTH}
         rowHeight={CARD_HEIGHT}
         width={windowSize.width}
         height={windowSize.height}
         onItemsRendered={({ visibleRowStopIndex }) => {
-          if (
-            visibleRowStopIndex >= rowCount - 1 &&
-            !loading &&
-            cursor !== null
-          ) {
+          const isLastRow = () => {
+            return (
+              visibleRowStopIndex >= ROW_COUNT - 1 &&
+              !loading &&
+              cursor !== null
+            );
+          };
+          if (isLastRow()) {
             fetchKanji();
           }
         }}
