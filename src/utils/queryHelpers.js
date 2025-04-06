@@ -1,4 +1,9 @@
-const BASE_API = 'http://localhost:40324/api/v1/hanzawa-kanji';
+import { BASE_API } from '../constants';
+
+export function buildApiUrl(params = {}) {
+  const cleanedQueryParams = cleanParams(params);
+  return `${BASE_API}${buildQueryString(cleanedQueryParams)}`;
+}
 
 function cleanParams(params = {}) {
   return Object.fromEntries(
@@ -6,13 +11,8 @@ function cleanParams(params = {}) {
   );
 }
 
-export function buildQueryString(params = {}) {
+function buildQueryString(params = {}) {
   const query = new URLSearchParams(params).toString();
 
   return query ? `?${query}` : '';
-}
-
-export function buildApiUrl(params = {}) {
-  const cleanedUrl = cleanParams(params);
-  return `${BASE_API}${buildQueryString(cleanedUrl)}`;
 }

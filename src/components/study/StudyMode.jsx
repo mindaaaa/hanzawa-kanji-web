@@ -1,8 +1,8 @@
 import KanjiCard from '../KanjiCard.jsx';
 import styles from '../../css/StudyMode.module.css';
 import React, { useEffect, useState } from 'react';
-import { getKanjiUrl } from '../../constants/getKanjiUrl.js';
 import { FixedSizeGrid } from 'react-window';
+import { buildApiUrl } from '../../utils/queryHelpers.js';
 
 export default function StudyMode() {
   const CARD_WIDTH = 220;
@@ -41,7 +41,7 @@ export default function StudyMode() {
     setLoading(true);
 
     try {
-      const url = getKanjiUrl({ quizId: 'yyy', cursor });
+      const url = buildApiUrl({ quizId: 'yyy', cursor });
       const data = await fetch(url).then((res) => res.json());
 
       setItems((prev) => {
