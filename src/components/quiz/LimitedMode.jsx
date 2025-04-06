@@ -25,7 +25,7 @@ export default function LimitedMode() {
 
       {currentQuiz && (
         <div onClick={() => setFlipped(!flipped)}>
-          <KanjiCard kanji={currentQuiz} flipped={flipped} />
+          <KanjiCard key={quizIndex} kanji={currentQuiz} flipped={flipped} />
         </div>
       )}
 
