@@ -1,0 +1,156 @@
+[
+  {
+    "id": 1,
+    "value": "亜",
+    "korean": [
+      {
+        "kun": "버금",
+        "on": "아"
+      }
+    ],
+    "kunyomi": [],
+    "onyomi": ["ア"],
+    "traditionalForm": "亞"
+  },
+  {
+    "id": 2,
+    "value": "哀",
+    "korean": [
+      {
+        "kun": "슬플",
+        "on": "애"
+      }
+    ],
+    "kunyomi": ["あわ-れ", "あわ-れむ"],
+    "onyomi": ["アイ"],
+    "traditionalForm": null
+  },
+  {
+    "id": 3,
+    "value": "挨",
+    "korean": [
+      {
+        "kun": "밀칠",
+        "on": "애"
+      }
+    ],
+    "kunyomi": [],
+    "onyomi": ["アイ"],
+    "traditionalForm": null
+  },
+  {
+    "id": 4,
+    "value": "愛",
+    "korean": [
+      {
+        "kun": "사랑",
+        "on": "애"
+      }
+    ],
+    "kunyomi": [],
+    "onyomi": ["アイ"],
+    "traditionalForm": null
+  },
+  {
+    "id": 5,
+    "value": "曖",
+    "korean": [
+      {
+        "kun": "희미할",
+        "on": "애"
+      }
+    ],
+    "kunyomi": [],
+    "onyomi": ["アイ"],
+    "traditionalForm": null
+  },
+  {
+    "id": 6,
+    "value": "悪",
+    "korean": [
+      {
+        "kun": "악할",
+        "on": "악"
+      }
+    ],
+    "kunyomi": ["わる-い"],
+    "onyomi": ["アク", "オ"],
+    "traditionalForm": "惡"
+  },
+  {
+    "id": 7,
+    "value": "握",
+    "korean": [
+      {
+        "kun": "쥘",
+        "on": "악"
+      },
+      {
+        "kun": "악수",
+        "on": "우"
+      }
+    ],
+    "kunyomi": ["にぎ-る"],
+    "onyomi": ["アク"],
+    "traditionalForm": null
+  },
+  {
+    "id": 8,
+    "value": "圧",
+    "korean": [
+      {
+        "kun": "누를",
+        "on": "압"
+      }
+    ],
+    "kunyomi": [],
+    "onyomi": ["アツ"],
+    "traditionalForm": "壓"
+  },
+  {
+    "id": 9,
+    "value": "扱",
+    "korean": [
+      {
+        "kun": "미칠",
+        "on": "급"
+      },
+      {
+        "kun": "거둘",
+        "on": "흡"
+      },
+      {
+        "kun": "꽂을",
+        "on": "삽"
+      }
+    ],
+    "kunyomi": ["あつか-う"],
+    "onyomi": [],
+    "traditionalForm": null
+  },
+  {
+    "id": 10,
+    "value": "宛",
+    "korean": [
+      {
+        "kun": "완연할",
+        "on": "완"
+      },
+      {
+        "kun": "고을 이름",
+        "on": "원"
+      },
+      {
+        "kun": "쌓일",
+        "on": "온"
+      },
+      {
+        "kun": "맺힐",
+        "on": "울"
+      }
+    ],
+    "kunyomi": ["あ-てる"],
+    "onyomi": [],
+    "traditionalForm": null
+  }
+]
