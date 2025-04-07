@@ -11,10 +11,6 @@ export default function LimitedMode() {
     setQuizList(quizData);
   }, []);
 
-  useEffect(() => {
-    setFlipped(false);
-  }, [quizIndex]);
-
   const currentQuiz = quizList[quizIndex];
 
   return (
