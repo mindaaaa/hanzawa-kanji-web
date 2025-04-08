@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import styles from '../css/KanjiCard.module.css';
 import ReadingRow from './ReadingRow.jsx';
 
-export default function KanjiCard({ kanji }) {
+const areEqual = (prev, next) => {
+  return prev.kanji.id === next.kanji.id;
+};
+
+function KanjiCard({ kanji }) {
   const [flipped, setFlipped] = useState(false);
 
   return (
@@ -33,3 +37,5 @@ export default function KanjiCard({ kanji }) {
     </div>
   );
 }
+
+export default React.memo(KanjiCard, areEqual);

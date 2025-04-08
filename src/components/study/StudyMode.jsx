@@ -16,20 +16,18 @@ export default function StudyMode() {
     height: window.innerHeight,
   });
 
-  // 1. resize 이벤트 등록 (TODO: resize 최적화)
   useEffect(() => {
-    const handleResize = () => {
+    const handleResize = throttle(() => {
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight,
       });
-    };
+    }, 300);
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 2. 열 개수 계산
   const COLUMN_COUNT = Math.max(1, Math.floor(windowSize.width / CARD_WIDTH));
   const ROW_COUNT = Math.ceil(items.length / COLUMN_COUNT);
 
@@ -103,4 +101,17 @@ export default function StudyMode() {
       {loading && <p className={styles.loading}>로딩 중...</p>}
     </>
   );
+}
+
+function throttle(func, delay) {
+  let current = 0;
+
+  return function (...args) {
+    const now = Date.now();
+
+    if (now - current >= delay) {
+      current = now;
+      func.apply(this, args);
+    }
+  };
 }
