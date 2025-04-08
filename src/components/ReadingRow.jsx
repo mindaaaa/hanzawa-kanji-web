@@ -1,6 +1,7 @@
+import React from 'react';
 import styles from '../css/KanjiCard.module.css';
 
-export default function ReadingRow({ type, label, value }) {
+function ReadingRow({ type, label, value }) {
   return (
     <p className={`${styles[type]} ${!value.length ? styles.hidden : ''}`}>
       <span className={styles.label}>{label}</span>
@@ -8,3 +9,10 @@ export default function ReadingRow({ type, label, value }) {
     </p>
   );
 }
+
+const areEqual = (prev, next) =>
+  prev.type === next.type &&
+  prev.label === next.label &&
+  JSON.stringify(prev.value) === JSON.stringify(next.value);
+
+export default React.memo(ReadingRow, areEqual);

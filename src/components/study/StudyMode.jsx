@@ -89,10 +89,10 @@ export default function StudyMode() {
         {({ columnIndex, rowIndex, style }) => {
           const index = rowIndex * COLUMN_COUNT + columnIndex;
           const kanji = items[index];
-          if (!kanji) return null;
+          const key = kanji ? kanji.id : `${rowIndex}-${columnIndex}`;
 
           return (
-            <div style={style} key={kanji.id}>
+            <div style={style} key={key}>
               <KanjiCard kanji={kanji} />
             </div>
           );
