@@ -8,6 +8,7 @@ export default function LimitedMode() {
   const [error, setError] = useState(null);
   const [flipped, setFlipped] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [displayMode, setDisplayMode] = useState('meaning');
 
   const quizIdRef = useRef(crypto.randomUUID());
 
@@ -30,38 +31,41 @@ export default function LimitedMode() {
     }
   };
 
-  function handleNext() {
-    setFlipped(false);
-    setQuizIndex((prev) => prev + 1);
-  }
-
   useEffect(() => {
     fetchQuizList();
   }, []);
 
   const currentQuiz = quizList[quizIndex];
 
-  // 훈, 음 있나 체크하고 랜덤하게 뽑아주기
-  // TODO: 음, 훈 중복된 경우 처리
-  // function pickRandomType(kanji) {
-  //   const types = [];
+  function getDisplayText(kanji, mode = 'meaning') {
+    if (!kanji) return '없음 / 없음';
 
-  //   if (kanji.korean.kun && kanji.korean.kun.length > 0) types.push('kunyomi');
-  //   if (kanji.korean.on && kanji.korean.on > 0) types.push('onyomi');
+    const { korean, kunyomi = [], onyomi = [] } = kanji;
 
-  //   if (types.length === 0) return null;
+    if (mode === 'meaning') {
+      const { kun = '-', on = '-' } = shuffle(korean)[0] || {};
+      return `${kun} / ${on}`;
+    }
 
-  //   const randomIndex = Math.floor(Math.random() * types.length);
-  //   return types[randomIndex];
-  // }
-
-  function getMeaningAndReading(kanji) {
-    const { korean } = kanji;
-    if (!korean || korean.length === 0) return '없음 / 없음';
-
-    const { kun, on } = korean[0];
-    return `${kun} / ${on}`;
+    if (mode === 'reading') {
+      const shuffledKunyomi = shuffle(kunyomi)[0] || '-';
+      const shuffledOnyomi = shuffle(onyomi)[0] || '-';
+      return `${shuffledKunyomi} / ${shuffledOnyomi}`;
+    }
   }
+  // const correctAnswer = useMemo(() => {
+  //   if (!currentQuiz) return '';
+  //   return getMeaningAndReading(currentQuiz);
+  // }, [currentQuiz]);
+  const allChoices = useMemo(() => {
+    if (!currentQuiz || quizList.length === 0) return [];
+
+    const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
+
+    const choices = shuffle(filtered).slice(0, 3);
+
+    return shuffle([currentQuiz, ...choices]);
+  }, [currentQuiz, quizList]);
 
   function shuffle(array) {
     const copied = [...array];
@@ -74,24 +78,20 @@ export default function LimitedMode() {
     return copied;
   }
 
-  const correctAnswer = useMemo(() => {
-    if (!currentQuiz) return '';
-    return getMeaningAndReading(currentQuiz);
-  }, [currentQuiz]);
+  // function pickRandomType(kanji) {
+  //   const types = [];
 
-  // const type = currentQuiz ? pickRandomType(currentQuiz) : null;
+  //   if ((kanji.onyomi || []).length > 0) types.push('onyomi');
+  //   if ((kanji.kunyomi || []).length > 0) types.push('kunyomi');
+  //   if (types.length === 0) return null;
 
-  const allChoices = useMemo(() => {
-    if (!currentQuiz || quizList.length === 0) return [];
+  //   return shuffle(types)[0];
+  // }
 
-    const choices = shuffle(
-      quizList.filter((item) => item.id !== currentQuiz.id)
-    )
-      .slice(0, 3)
-      .map((item) => getMeaningAndReading(item));
-
-    return shuffle([correctAnswer, ...choices]);
-  }, [currentQuiz, quizList]);
+  function handleNext() {
+    setFlipped(false);
+    setQuizIndex((prev) => prev + 1);
+  }
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -113,14 +113,25 @@ export default function LimitedMode() {
         </div>
       )}
 
-      {allChoices.map((choice, index) => (
-        <button
-          key={index}
-          style={{ margin: '0.5rem', padding: '1rem 2rem', fontSize: '1.2rem' }}
-        >
-          {choice}
-        </button>
-      ))}
+      <div style={{ margin: '1rem 0' }}>
+        {allChoices.map((choice, index) => (
+          <button
+            key={index}
+            style={{
+              margin: '0.5rem',
+              padding: '1rem 2rem',
+              fontSize: '1.2rem',
+            }}
+          >
+            {getDisplayText(choice, displayMode)}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ marginTop: '1rem' }}>
+        <button onClick={() => setDisplayMode('meaning')}>뜻 보기</button>
+        <button onClick={() => setDisplayMode('reading')}>읽기 보기</button>
+      </div>
 
       <div style={{ marginTop: '1rem' }}>
         {flipped && quizIndex < quizList.length - 1 && (
