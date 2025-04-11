@@ -9,6 +9,8 @@ export default function LimitedMode() {
   const [flipped, setFlipped] = useState(false);
   const [loading, setLoading] = useState(false);
   const [displayMode, setDisplayMode] = useState('meaning');
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isCorrect, setIsCorrect] = useState(null);
 
   const quizIdRef = useRef(crypto.randomUUID());
 
@@ -53,15 +55,13 @@ export default function LimitedMode() {
       return `${shuffledKunyomi} / ${shuffledOnyomi}`;
     }
   }
-  // const correctAnswer = useMemo(() => {
-  //   if (!currentQuiz) return '';
-  //   return getMeaningAndReading(currentQuiz);
-  // }, [currentQuiz]);
+
+  const correctAnswer = currentQuiz;
+
   const allChoices = useMemo(() => {
     if (!currentQuiz || quizList.length === 0) return [];
 
     const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
-
     const choices = shuffle(filtered).slice(0, 3);
 
     return shuffle([currentQuiz, ...choices]);
@@ -69,27 +69,26 @@ export default function LimitedMode() {
 
   function shuffle(array) {
     const copied = [...array];
-
     for (let i = copied.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
       [copied[i], copied[j]] = [copied[j], copied[i]];
     }
-
     return copied;
   }
 
-  // function pickRandomType(kanji) {
-  //   const types = [];
+  function handleAnswerClick(choice) {
+    if (selectedAnswer !== null) return;
 
-  //   if ((kanji.onyomi || []).length > 0) types.push('onyomi');
-  //   if ((kanji.kunyomi || []).length > 0) types.push('kunyomi');
-  //   if (types.length === 0) return null;
-
-  //   return shuffle(types)[0];
-  // }
+    setSelectedAnswer(choice);
+    const correct = choice.id === currentQuiz.id; // ✅ 객체 비교 → id 기준
+    setIsCorrect(correct);
+    setFlipped(true);
+  }
 
   function handleNext() {
     setFlipped(false);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
     setQuizIndex((prev) => prev + 1);
   }
 
@@ -114,18 +113,35 @@ export default function LimitedMode() {
       )}
 
       <div style={{ margin: '1rem 0' }}>
-        {allChoices.map((choice, index) => (
-          <button
-            key={index}
-            style={{
-              margin: '0.5rem',
-              padding: '1rem 2rem',
-              fontSize: '1.2rem',
-            }}
-          >
-            {getDisplayText(choice, displayMode)}
-          </button>
-        ))}
+        {allChoices.map((choice, index) => {
+          const isCorrectAnswer = choice.id === correctAnswer.id;
+          const isSelected = choice.id === selectedAnswer?.id;
+
+          return (
+            <button
+              key={index}
+              onClick={() => handleAnswerClick(choice)}
+              disabled={selectedAnswer !== null} // ✅ 선택 후 클릭 방지
+              style={{
+                margin: '0.5rem',
+                padding: '1rem 2rem',
+                fontSize: '1.2rem',
+                cursor: selectedAnswer ? 'not-allowed' : 'pointer',
+                backgroundColor: selectedAnswer
+                  ? isCorrectAnswer
+                    ? 'lightgreen'
+                    : isSelected
+                    ? 'salmon'
+                    : '#eee'
+                  : '',
+                opacity:
+                  selectedAnswer && !isCorrectAnswer && !isSelected ? 0.6 : 1,
+              }}
+            >
+              {getDisplayText(choice, displayMode)}
+            </button>
+          );
+        })}
       </div>
 
       <div style={{ marginTop: '1rem' }}>
@@ -134,7 +150,7 @@ export default function LimitedMode() {
       </div>
 
       <div style={{ marginTop: '1rem' }}>
-        {flipped && quizIndex < quizList.length - 1 && (
+        {selectedAnswer && quizIndex < quizList.length - 1 && (
           <button onClick={handleNext}>다음 문제</button>
         )}
         {flipped && quizIndex === quizList.length - 1 && <p>🎉 퀴즈 완료!</p>}
