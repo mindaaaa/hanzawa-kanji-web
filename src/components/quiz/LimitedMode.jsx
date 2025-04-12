@@ -12,9 +12,12 @@ export default function LimitedMode() {
   const [displayMode, setDisplayMode] = useState('meaning');
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [quizLimit, setQuizLimit] = useState(null);
-  const [isCorrect, setIsCorrect] = useState(null);
+  const [isCorrect, setIsCorrect] = useState(null); // TODO: 사용자가 클릭한 버튼 CSS 처리
+  const [correctCount, setCorrectCount] = useState(0);
 
   const quizIdRef = useRef(crypto.randomUUID());
+  const isLastQuestion = quizIndex === quizList.length - 1;
+  const isQuizFinished = isLastQuestion && flipped;
 
   const fetchQuizList = async () => {
     if (loading) return;
@@ -88,7 +91,13 @@ export default function LimitedMode() {
     if (selectedAnswer !== null) return;
 
     setSelectedAnswer(choice);
-    setIsCorrect(choice.id === currentQuiz.id);
+
+    const correct = choice.id === currentQuiz.id;
+    setIsCorrect(correct);
+    if (correct) {
+      setCorrectCount((prev) => prev + 1);
+    }
+
     setTimeout(() => {
       setFlipped(true);
     }, 100);
@@ -177,10 +186,16 @@ export default function LimitedMode() {
             {selectedAnswer && quizIndex < quizList.length - 1 && (
               <button onClick={handleNext}>다음 문제</button>
             )}
-            {flipped && quizIndex === quizList.length - 1 && (
-              <p>🎉 퀴즈 완료!</p>
-            )}
           </div>
+
+          {isQuizFinished && (
+            <div style={{ marginTop: '2rem' }}>
+              <h2>퀴즈 완료! 🎉</h2>
+              <p>총 문항 수: {quizList.length}</p>
+              <p>정답률: {`${(correctCount / quizList.length) * 100}%`}</p>
+              <button onClick={() => window.location.reload()}>처음으로</button>
+            </div>
+          )}
         </>
       )}
     </div>

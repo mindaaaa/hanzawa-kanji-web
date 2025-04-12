@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ChoiceButtons({ options, onSelect, selected }) {
+export default function ChoiceButtons({ options, selected, onSelect }) {
   return (
     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
       {options.map((opt) => (
