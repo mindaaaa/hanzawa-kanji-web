@@ -1,8 +1,8 @@
-import KanjiCard from '../KanjiCard.jsx';
-import styles from '../../css/StudyMode.module.css';
+import KanjiCard from '../components/KanjiCard.jsx';
+import styles from '../shared/css/StudyMode.module.css';
 import React, { useEffect, useState } from 'react';
 import { FixedSizeGrid } from 'react-window';
-import { buildApiUrl } from '../../utils/queryHelpers.js';
+import { buildApiUrl } from '../utils/queryHelpers.js';
 
 export default function StudyMode() {
   const CARD_WIDTH = 220;

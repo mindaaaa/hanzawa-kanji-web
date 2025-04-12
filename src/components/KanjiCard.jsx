@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from '../css/KanjiCard.module.css';
+import styles from '../shared/css/KanjiCard.module.css';
 import ReadingRow from './ReadingRow.jsx';
 
 const areEqual = (prev, next) => {

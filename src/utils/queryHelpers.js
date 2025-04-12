@@ -1,4 +1,4 @@
-import { BASE_API } from '../constants';
+import { BASE_API } from '../shared/constants';
 
 export function buildApiUrl(params = {}) {
   const cleanedQueryParams = cleanParams(params);

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import InfiniteMode from './components/quiz/InfiniteMode.jsx';
-import LimitedMode from './components/quiz/LimitedMode.jsx';
-import StudyMode from './components/study/StudyMode.jsx';
+import InfiniteMode from './pages/InfiniteMode.jsx';
+import LimitedMode from './pages/LimitedMode.jsx';
+import StudyMode from './pages/StudyMode.jsx';
 
 function App() {
   const [mode, setMode] = useState('');

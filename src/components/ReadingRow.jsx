@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../css/KanjiCard.module.css';
+import styles from '../shared/css/KanjiCard.module.css';
 
 function ReadingRow({ type, label, value }) {
   return (

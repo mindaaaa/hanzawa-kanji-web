@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import KanjiCard from '../../components/KanjiCard.jsx';
-import { buildApiUrl } from '../../utils/queryHelpers.js';
-import ChoiceButtons from '../ChoiceButtons.jsx';
+import KanjiCard from '../components/KanjiCard.jsx';
+import { buildApiUrl } from '../utils/queryHelpers.js';
+import ChoiceButtons from '../components/ChoiceButtons.jsx';
 
 export default function LimitedMode() {
   const [quizList, setQuizList] = useState([]);
