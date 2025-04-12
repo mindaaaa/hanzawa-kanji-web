@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import KanjiCard from '../components/KanjiCard.jsx';
 import { buildApiUrl } from '../utils/queryHelpers.js';
 import ChoiceButtons from '../components/ChoiceButtons.jsx';
+import ResultSummary from '../components/ResultSummary.jsx';
+import { shuffle } from '../utils/shuffle.js';
+import QuestionCard from '../components/QuestionCard.jsx';
 
 export default function LimitedMode() {
   const [quizList, setQuizList] = useState([]);
@@ -50,25 +52,6 @@ export default function LimitedMode() {
 
   const currentQuiz = quizList[quizIndex];
 
-  function getDisplayText(kanji, mode = 'meaning') {
-    if (!kanji) return '없음 / 없음';
-
-    const { korean, kunyomi = [], onyomi = [] } = kanji;
-
-    if (mode === 'meaning') {
-      const { kun = '-', on = '-' } = shuffle(korean)[0] || {};
-      return `${kun} / ${on}`;
-    }
-
-    if (mode === 'reading') {
-      const shuffledKunyomi = shuffle(kunyomi)[0] || '-';
-      const shuffledOnyomi = shuffle(onyomi)[0] || '-';
-      return `${shuffledKunyomi} / ${shuffledOnyomi}`;
-    }
-  }
-
-  const correctAnswer = currentQuiz;
-
   const allChoices = useMemo(() => {
     if (!currentQuiz || quizList.length === 0) return [];
 
@@ -77,15 +60,6 @@ export default function LimitedMode() {
 
     return shuffle([currentQuiz, ...choices]);
   }, [currentQuiz, quizList]);
-
-  function shuffle(array) {
-    const copied = [...array];
-    for (let i = copied.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [copied[i], copied[j]] = [copied[j], copied[i]];
-    }
-    return copied;
-  }
 
   function handleAnswerClick(choice) {
     if (selectedAnswer !== null) return;
@@ -135,47 +109,14 @@ export default function LimitedMode() {
             퀴즈 {quizIndex + 1} / {quizList.length}
           </h2>
 
-          <div>
-            <KanjiCard
-              key={currentQuiz.id}
-              kanji={currentQuiz}
-              flipped={flipped}
-            />
-          </div>
-
-          <div style={{ margin: '1rem 0' }}>
-            {allChoices.map((choice, index) => {
-              const isCorrectAnswer = choice.id === correctAnswer.id;
-              const isSelected = choice.id === selectedAnswer?.id;
-
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleAnswerClick(choice)}
-                  disabled={selectedAnswer !== null} // ✅ 선택 후 클릭 방지
-                  style={{
-                    margin: '0.5rem',
-                    padding: '1rem 2rem',
-                    fontSize: '1.2rem',
-                    cursor: selectedAnswer ? 'not-allowed' : 'pointer',
-                    backgroundColor: selectedAnswer
-                      ? isCorrectAnswer
-                        ? 'lightgreen'
-                        : isSelected
-                        ? 'salmon'
-                        : '#eee'
-                      : '',
-                    opacity:
-                      selectedAnswer && !isCorrectAnswer && !isSelected
-                        ? 0.6
-                        : 1,
-                  }}
-                >
-                  {getDisplayText(choice, displayMode)}
-                </button>
-              );
-            })}
-          </div>
+          <QuestionCard
+            currentQuiz={currentQuiz}
+            allChoices={allChoices}
+            flipped={flipped}
+            selectedAnswer={selectedAnswer}
+            handleAnswerClick={handleAnswerClick}
+            displayMode={displayMode}
+          />
 
           <div style={{ marginTop: '1rem' }}>
             <button onClick={() => setDisplayMode('meaning')}>뜻 보기</button>
@@ -189,12 +130,11 @@ export default function LimitedMode() {
           </div>
 
           {isQuizFinished && (
-            <div style={{ marginTop: '2rem' }}>
-              <h2>퀴즈 완료! 🎉</h2>
-              <p>총 문항 수: {quizList.length}</p>
-              <p>정답률: {`${(correctCount / quizList.length) * 100}%`}</p>
-              <button onClick={() => window.location.reload()}>처음으로</button>
-            </div>
+            <ResultSummary
+              total={quizList.length}
+              correct={correctCount}
+              onRestart={() => window.location.reload()}
+            />
           )}
         </>
       )}
