@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import KanjiCard from '../../components/KanjiCard.jsx';
 import { buildApiUrl } from '../../utils/queryHelpers.js';
+import ChoiceButtons from '../ChoiceButtons.jsx';
 
 export default function LimitedMode() {
   const [quizList, setQuizList] = useState([]);
@@ -10,6 +11,7 @@ export default function LimitedMode() {
   const [loading, setLoading] = useState(false);
   const [displayMode, setDisplayMode] = useState('meaning');
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [quizLimit, setQuizLimit] = useState(null);
   const [isCorrect, setIsCorrect] = useState(null);
 
   const quizIdRef = useRef(crypto.randomUUID());
@@ -19,7 +21,11 @@ export default function LimitedMode() {
     setLoading(true);
 
     try {
-      const url = buildApiUrl({ quizId: quizIdRef.current, mode: 'RANDOM' });
+      const url = buildApiUrl({
+        quizId: quizIdRef.current,
+        mode: 'RANDOM',
+        limit: quizLimit,
+      });
       const data = await fetch(url).then((res) => res.json());
 
       setQuizList(data.items);
@@ -34,8 +40,10 @@ export default function LimitedMode() {
   };
 
   useEffect(() => {
-    fetchQuizList();
-  }, []);
+    if (quizLimit !== null) {
+      fetchQuizList();
+    }
+  }, [quizLimit]);
 
   const currentQuiz = quizList[quizIndex];
 
@@ -80,9 +88,10 @@ export default function LimitedMode() {
     if (selectedAnswer !== null) return;
 
     setSelectedAnswer(choice);
-    const correct = choice.id === currentQuiz.id; // ✅ 객체 비교 → id 기준
-    setIsCorrect(correct);
-    setFlipped(true);
+    setIsCorrect(choice.id === currentQuiz.id);
+    setTimeout(() => {
+      setFlipped(true);
+    }, 100);
   }
 
   function handleNext() {
@@ -95,66 +104,85 @@ export default function LimitedMode() {
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
       {loading && <p>로딩 중...🐌</p>}
-      {!loading && quizList.length === 0 && <p>⚠️ 문제가 없습니다</p>}
+      {quizLimit && !loading && quizList.length === 0 && (
+        <p>⚠️ 문제가 없습니다</p>
+      )}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <h2>
-        퀴즈 {quizIndex + 1} / {quizList.length}
-      </h2>
-
-      {currentQuiz && (
-        <div onClick={() => setFlipped(!flipped)}>
-          <KanjiCard
-            key={currentQuiz.id}
-            kanji={currentQuiz}
-            flipped={flipped}
+      {!quizLimit && (
+        <>
+          <h3>문제 수를 선택하세요!</h3>
+          <ChoiceButtons
+            options={[10, 20, 30]}
+            selected={quizLimit}
+            onSelect={(value) => setQuizLimit(value)}
           />
-        </div>
+        </>
       )}
 
-      <div style={{ margin: '1rem 0' }}>
-        {allChoices.map((choice, index) => {
-          const isCorrectAnswer = choice.id === correctAnswer.id;
-          const isSelected = choice.id === selectedAnswer?.id;
+      {quizLimit && currentQuiz && (
+        <>
+          <h2>
+            퀴즈 {quizIndex + 1} / {quizList.length}
+          </h2>
 
-          return (
-            <button
-              key={index}
-              onClick={() => handleAnswerClick(choice)}
-              disabled={selectedAnswer !== null} // ✅ 선택 후 클릭 방지
-              style={{
-                margin: '0.5rem',
-                padding: '1rem 2rem',
-                fontSize: '1.2rem',
-                cursor: selectedAnswer ? 'not-allowed' : 'pointer',
-                backgroundColor: selectedAnswer
-                  ? isCorrectAnswer
-                    ? 'lightgreen'
-                    : isSelected
-                    ? 'salmon'
-                    : '#eee'
-                  : '',
-                opacity:
-                  selectedAnswer && !isCorrectAnswer && !isSelected ? 0.6 : 1,
-              }}
-            >
-              {getDisplayText(choice, displayMode)}
-            </button>
-          );
-        })}
-      </div>
+          <div>
+            <KanjiCard
+              key={currentQuiz.id}
+              kanji={currentQuiz}
+              flipped={flipped}
+            />
+          </div>
 
-      <div style={{ marginTop: '1rem' }}>
-        <button onClick={() => setDisplayMode('meaning')}>뜻 보기</button>
-        <button onClick={() => setDisplayMode('reading')}>읽기 보기</button>
-      </div>
+          <div style={{ margin: '1rem 0' }}>
+            {allChoices.map((choice, index) => {
+              const isCorrectAnswer = choice.id === correctAnswer.id;
+              const isSelected = choice.id === selectedAnswer?.id;
 
-      <div style={{ marginTop: '1rem' }}>
-        {selectedAnswer && quizIndex < quizList.length - 1 && (
-          <button onClick={handleNext}>다음 문제</button>
-        )}
-        {flipped && quizIndex === quizList.length - 1 && <p>🎉 퀴즈 완료!</p>}
-      </div>
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleAnswerClick(choice)}
+                  disabled={selectedAnswer !== null} // ✅ 선택 후 클릭 방지
+                  style={{
+                    margin: '0.5rem',
+                    padding: '1rem 2rem',
+                    fontSize: '1.2rem',
+                    cursor: selectedAnswer ? 'not-allowed' : 'pointer',
+                    backgroundColor: selectedAnswer
+                      ? isCorrectAnswer
+                        ? 'lightgreen'
+                        : isSelected
+                        ? 'salmon'
+                        : '#eee'
+                      : '',
+                    opacity:
+                      selectedAnswer && !isCorrectAnswer && !isSelected
+                        ? 0.6
+                        : 1,
+                  }}
+                >
+                  {getDisplayText(choice, displayMode)}
+                </button>
+              );
+            })}
+          </div>
+
+          <div style={{ marginTop: '1rem' }}>
+            <button onClick={() => setDisplayMode('meaning')}>뜻 보기</button>
+            <button onClick={() => setDisplayMode('reading')}>읽기 보기</button>
+          </div>
+
+          <div style={{ marginTop: '1rem' }}>
+            {selectedAnswer && quizIndex < quizList.length - 1 && (
+              <button onClick={handleNext}>다음 문제</button>
+            )}
+            {flipped && quizIndex === quizList.length - 1 && (
+              <p>🎉 퀴즈 완료!</p>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
