@@ -21,10 +21,11 @@ export default function QuestionCard({
     }
 
     if (mode === 'reading') {
-      const shuffledKunyomi = shuffle(kunyomi)[0] || '-';
+      const shuffledKunyomi = shuffle(kunyomi)[0] || '-'; // TODO: '-' 최상단에 뽑기
       const shuffledOnyomi = shuffle(onyomi)[0] || '-';
       return `${shuffledKunyomi} / ${shuffledOnyomi}`;
     }
+    throw new Error('잘못된 모드입니다🤯');
   }
 
   const correctAnswer = currentQuiz;
@@ -44,7 +45,7 @@ export default function QuestionCard({
             <button
               key={index}
               onClick={() => handleAnswerClick(choice)}
-              disabled={selectedAnswer !== null} // ✅ 선택 후 클릭 방지
+              disabled={selectedAnswer !== null} // TODO: null과 엄격한 비교! 주의하자
               style={{
                 margin: '0.5rem',
                 padding: '1rem 2rem',

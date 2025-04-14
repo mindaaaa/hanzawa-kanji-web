@@ -82,7 +82,7 @@ export default function LimitedMode() {
     setSelectedAnswer(null);
     setIsCorrect(null);
     setQuizIndex((prev) => prev + 1);
-  }
+  } // 파사드 패턴인가봄 ㄷㄷ 알아보기👀
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
