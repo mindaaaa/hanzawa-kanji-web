@@ -58,7 +58,22 @@ export default function LimitedMode() {
     const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
     const choices = shuffle(filtered).slice(0, 3);
 
-    return shuffle([currentQuiz, ...choices]);
+    const formatChoice = (kanji) => {
+      const { korean, kunyomi, onyomi } = kanji;
+      const { kun = '-', on = '-' } = shuffle(korean)[0] || {};
+      const kunRead = shuffle(kunyomi)[0] || '-';
+      const onRead = shuffle(onyomi)[0] || '-';
+
+      return {
+        ...kanji,
+        display: {
+          meaning: `${kun} / ${on}`,
+          reading: `${kunRead} / ${onRead}`,
+        },
+      };
+    };
+
+    return shuffle([currentQuiz, ...choices]).map(formatChoice);
   }, [currentQuiz, quizList]);
 
   function handleAnswerClick(choice) {

@@ -10,24 +10,6 @@ export default function QuestionCard({
   handleAnswerClick,
   displayMode,
 }) {
-  function getDisplayText(kanji, mode = 'meaning') {
-    if (!kanji) return '없음 / 없음';
-
-    const { korean, kunyomi = [], onyomi = [] } = kanji;
-
-    if (mode === 'meaning') {
-      const { kun = '-', on = '-' } = shuffle(korean)[0] || {};
-      return `${kun} / ${on}`;
-    }
-
-    if (mode === 'reading') {
-      const shuffledKunyomi = shuffle(kunyomi)[0] || '-'; // TODO: '-' 최상단에 뽑기
-      const shuffledOnyomi = shuffle(onyomi)[0] || '-';
-      return `${shuffledKunyomi} / ${shuffledOnyomi}`;
-    }
-    throw new Error('잘못된 모드입니다🤯');
-  }
-
   const correctAnswer = currentQuiz;
 
   return (
@@ -62,7 +44,7 @@ export default function QuestionCard({
                   selectedAnswer && !isCorrectAnswer && !isSelected ? 0.6 : 1,
               }}
             >
-              {getDisplayText(choice, displayMode)}
+              {choice.display[displayMode]}
             </button>
           );
         })}
