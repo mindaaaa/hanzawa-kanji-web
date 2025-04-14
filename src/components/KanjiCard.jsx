@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../shared/css/KanjiCard.module.css';
 import ReadingRow from './ReadingRow.jsx';
 
@@ -6,12 +6,19 @@ const areEqual = (prev, next) => {
   return prev.kanji.id === next.kanji.id && prev.flipped === next.flipped;
 };
 
-function KanjiCard({ kanji, flipped }) {
+function KanjiCard({ kanji, flipped: flippedProp, onClick }) {
+  const [internalFlip, setInternlFlip] = useState(false);
+  const isControlled = flippedProp !== undefined;
+
+  const flipped = isControlled ? flippedProp : internalFlip;
   return (
     <div className={styles['card-wrapper']}>
       <div
         className={`${styles.card} ${flipped ? styles.flipped : ''}`}
-        // onClick={() => setFlipped(!flipped)}
+        onClick={() => {
+          if (!isControlled) setInternlFlip((prev) => !prev);
+          if (onClick) return onClick();
+        }}
       >
         <div className={styles.front}>{kanji.value}</div>
         <div className={styles.back}>

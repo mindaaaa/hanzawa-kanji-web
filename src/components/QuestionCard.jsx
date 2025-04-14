@@ -1,6 +1,5 @@
 import React from 'react';
 import KanjiCard from './KanjiCard.jsx';
-import { shuffle } from '../utils/shuffle.js';
 
 export default function QuestionCard({
   currentQuiz,

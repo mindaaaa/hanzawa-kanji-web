@@ -93,7 +93,7 @@ export default function StudyMode() {
 
           return (
             <div style={style} key={key}>
-              <KanjiCard kanji={kanji} />
+              {kanji ? <KanjiCard kanji={kanji} /> : null}
             </div>
           );
         }}
