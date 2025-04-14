@@ -11,7 +11,6 @@ export default function LimitedMode() {
   const [error, setError] = useState(null);
   const [flipped, setFlipped] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [displayMode, setDisplayMode] = useState('meaning');
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [quizLimit, setQuizLimit] = useState(null);
   const [isCorrect, setIsCorrect] = useState(null); // TODO: 사용자가 클릭한 버튼 CSS 처리
@@ -59,17 +58,12 @@ export default function LimitedMode() {
     const choices = shuffle(filtered).slice(0, 3);
 
     const formatChoice = (kanji) => {
-      const { korean, kunyomi, onyomi } = kanji;
+      const { korean } = kanji;
       const { kun = '-', on = '-' } = shuffle(korean)[0] || {};
-      const kunRead = shuffle(kunyomi)[0] || '-';
-      const onRead = shuffle(onyomi)[0] || '-';
 
       return {
         ...kanji,
-        display: {
-          meaning: `${kun} / ${on}`,
-          reading: `${kunRead} / ${onRead}`,
-        },
+        display: [`${kun} / ${on}`],
       };
     };
 
@@ -130,13 +124,7 @@ export default function LimitedMode() {
             flipped={flipped}
             selectedAnswer={selectedAnswer}
             handleAnswerClick={handleAnswerClick}
-            displayMode={displayMode}
           />
-
-          <div style={{ marginTop: '1rem' }}>
-            <button onClick={() => setDisplayMode('meaning')}>뜻 보기</button>
-            <button onClick={() => setDisplayMode('reading')}>읽기 보기</button>
-          </div>
 
           <div style={{ marginTop: '1rem' }}>
             {selectedAnswer && quizIndex < quizList.length - 1 && (

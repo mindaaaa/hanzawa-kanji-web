@@ -7,7 +7,6 @@ export default function QuestionCard({
   flipped,
   selectedAnswer,
   handleAnswerClick,
-  displayMode,
 }) {
   const correctAnswer = currentQuiz;
 
@@ -43,7 +42,7 @@ export default function QuestionCard({
                   selectedAnswer && !isCorrectAnswer && !isSelected ? 0.6 : 1,
               }}
             >
-              {choice.display[displayMode]}
+              {choice.display[0]}
             </button>
           );
         })}
