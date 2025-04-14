@@ -1,5 +1,6 @@
 import React from 'react';
 import KanjiCard from './KanjiCard.jsx';
+import ReadingRow from './ReadingRow.jsx';
 
 export default function QuestionCard({
   currentQuiz,
@@ -14,7 +15,37 @@ export default function QuestionCard({
   return (
     <div>
       <div>
-        <KanjiCard key={currentQuiz.id} kanji={currentQuiz} flipped={flipped} />
+        <KanjiCard
+          key={currentQuiz.id}
+          kanji={currentQuiz}
+          flipped={flipped}
+          backContent={
+            <>
+              <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>
+                {currentQuiz.value}
+              </div>
+              <ReadingRow
+                type='kun'
+                label='훈'
+                value={currentQuiz.kunyomi || []}
+              />
+              <ReadingRow
+                type='on'
+                label='음'
+                value={currentQuiz.onyomi || []}
+              />
+              <ReadingRow
+                type='tra'
+                label='정자체'
+                value={
+                  currentQuiz.traditionalForm
+                    ? [currentQuiz.traditionalForm]
+                    : []
+                }
+              />
+            </>
+          }
+        />
       </div>
 
       <div style={{ margin: '1rem 0' }}>

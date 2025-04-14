@@ -6,11 +6,11 @@ const areEqual = (prev, next) => {
   return prev.kanji.id === next.kanji.id && prev.flipped === next.flipped;
 };
 
-function KanjiCard({ kanji, flipped: flippedProp, onClick }) {
+function KanjiCard({ kanji, flipped: flippedProp, onClick, backContent }) {
   const [internalFlip, setInternlFlip] = useState(false);
   const isControlled = flippedProp !== undefined;
-
   const flipped = isControlled ? flippedProp : internalFlip;
+
   return (
     <div className={styles['card-wrapper']}>
       <div
@@ -22,21 +22,27 @@ function KanjiCard({ kanji, flipped: flippedProp, onClick }) {
       >
         <div className={styles.front}>{kanji.value}</div>
         <div className={styles.back}>
-          {/* korean 표시 */}
-          <div className={styles.korean}>
-            {kanji.korean.map((item, i) => (
-              <div key={i}>
-                {item.kun} {item.on}
+          {backContent ? (
+            backContent
+          ) : (
+            <>
+              {/* korean 표시 */}
+              <div className={styles.korean}>
+                {kanji.korean.map((item, i) => (
+                  <div key={i}>
+                    {item.kun} {item.on}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <ReadingRow type='kun' label='훈' value={kanji.kunyomi || []} />
-          <ReadingRow type='on' label='음' value={kanji.onyomi || []} />
-          <ReadingRow
-            type='tra'
-            label='정자체'
-            value={kanji.traditionalForm ? [kanji.traditionalForm] : []}
-          />
+              <ReadingRow type='kun' label='훈' value={kanji.kunyomi || []} />
+              <ReadingRow type='on' label='음' value={kanji.onyomi || []} />
+              <ReadingRow
+                type='tra'
+                label='정자체'
+                value={kanji.traditionalForm ? [kanji.traditionalForm] : []}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
