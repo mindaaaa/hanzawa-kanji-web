@@ -13,13 +13,16 @@ export default function LimitedMode() {
   const [loading, setLoading] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [quizLimit, setQuizLimit] = useState(null);
-  const [isCorrect, setIsCorrect] = useState(null); // TODO: 사용자가 클릭한 버튼 CSS 처리
+  const [isCorrect, setIsCorrect] = useState(null);
   const [correctCount, setCorrectCount] = useState(0);
+  const [alertVisible, setAlertVisible] = useState(false);
 
   const quizIdRef = useRef(crypto.randomUUID());
+
   const isLastQuestion = quizIndex === quizList.length - 1;
   const isQuizFinished = isLastQuestion && flipped;
 
+  // 문제 리스트 요청
   const fetchQuizList = async () => {
     if (loading) return;
     setLoading(true);
@@ -60,7 +63,6 @@ export default function LimitedMode() {
     const formatChoice = (kanji) => {
       const { korean } = kanji;
       const { kun = '-', on = '-' } = shuffle(korean)[0] || {};
-
       return {
         ...kanji,
         display: [`${kun} / ${on}`],
@@ -71,27 +73,32 @@ export default function LimitedMode() {
   }, [currentQuiz, quizList]);
 
   function handleAnswerClick(choice) {
-    if (selectedAnswer !== null) return;
-
     setSelectedAnswer(choice);
+  }
 
-    const correct = choice.id === currentQuiz.id;
+  function handleShowAnswer() {
+    if (!selectedAnswer) {
+      setAlertVisible(true);
+      setTimeout(() => setAlertVisible(false), 1000);
+      return;
+    }
+
+    const correct = selectedAnswer.id === currentQuiz.id;
     setIsCorrect(correct);
+
     if (correct) {
       setCorrectCount((prev) => prev + 1);
     }
 
-    setTimeout(() => {
-      setFlipped(true);
-    }, 100);
-  }
+    setFlipped(true);
 
-  function handleNext() {
-    setFlipped(false);
-    setSelectedAnswer(null);
-    setIsCorrect(null);
-    setQuizIndex((prev) => prev + 1);
-  } // 파사드 패턴인가봄 ㄷㄷ 알아보기👀
+    setTimeout(() => {
+      setFlipped(false);
+      setSelectedAnswer(null);
+      setIsCorrect(null);
+      setQuizIndex((prev) => prev + 1);
+    }, 1000);
+  }
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -124,11 +131,15 @@ export default function LimitedMode() {
             flipped={flipped}
             selectedAnswer={selectedAnswer}
             handleAnswerClick={handleAnswerClick}
+            isCorrect={isCorrect}
           />
 
           <div style={{ marginTop: '1rem' }}>
-            {selectedAnswer && quizIndex < quizList.length - 1 && (
-              <button onClick={handleNext}>다음 문제</button>
+            <button onClick={handleShowAnswer}>정답 보기</button>
+            {alertVisible && (
+              <div style={{ color: 'red', marginTop: '1rem' }}>
+                ⚠️ 보기를 먼저 선택해주세요.
+              </div>
             )}
           </div>
 

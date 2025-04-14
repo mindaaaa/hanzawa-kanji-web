@@ -7,6 +7,7 @@ export default function QuestionCard({
   flipped,
   selectedAnswer,
   handleAnswerClick,
+  isCorrect,
 }) {
   const correctAnswer = currentQuiz;
 
@@ -21,25 +22,36 @@ export default function QuestionCard({
           const isCorrectAnswer = choice.id === correctAnswer.id;
           const isSelected = choice.id === selectedAnswer?.id;
 
+          let backgroundColor = '';
+          let border = '1px solid #ccc';
+
+          if (isCorrect !== null) {
+            backgroundColor = isCorrectAnswer
+              ? 'lightgreen'
+              : isSelected
+              ? 'salmon'
+              : '#eee';
+          } else if (isSelected) {
+            backgroundColor = '#d0e7ff'; // 연한 파랑
+            border = '2px solid #3399ff';
+          }
+
           return (
             <button
               key={index}
               onClick={() => handleAnswerClick(choice)}
-              disabled={selectedAnswer !== null} // TODO: null과 엄격한 비교! 주의하자
+              disabled={isCorrect !== null}
               style={{
                 margin: '0.5rem',
                 padding: '1rem 2rem',
                 fontSize: '1.2rem',
-                cursor: selectedAnswer ? 'not-allowed' : 'pointer',
-                backgroundColor: selectedAnswer
-                  ? isCorrectAnswer
-                    ? 'lightgreen'
-                    : isSelected
-                    ? 'salmon'
-                    : '#eee'
-                  : '',
+                cursor: isCorrect !== null ? 'not-allowed' : 'pointer',
+                backgroundColor,
+                border,
                 opacity:
-                  selectedAnswer && !isCorrectAnswer && !isSelected ? 0.6 : 1,
+                  isCorrect !== null && !isCorrectAnswer && !isSelected
+                    ? 0.6
+                    : 1,
               }}
             >
               {choice.display[0]}
