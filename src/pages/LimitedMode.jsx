@@ -22,7 +22,6 @@ export default function LimitedMode() {
   const isLastQuestion = quizIndex === quizList.length - 1;
   const isQuizFinished = isLastQuestion && flipped;
 
-  // 문제 리스트 요청
   const fetchQuizList = async () => {
     if (loading) return;
     setLoading(true);
@@ -63,9 +62,11 @@ export default function LimitedMode() {
     const formatChoice = (kanji) => {
       const { korean } = kanji;
       const { kun = '-', on = '-' } = shuffle(korean)[0] || {};
+      const display = [`${kun} / ${on}`];
+
       return {
         ...kanji,
-        display: [`${kun} / ${on}`],
+        display,
       };
     };
 
@@ -85,19 +86,28 @@ export default function LimitedMode() {
 
     const correct = selectedAnswer.id === currentQuiz.id;
     setIsCorrect(correct);
-
     if (correct) {
       setCorrectCount((prev) => prev + 1);
     }
 
-    setFlipped(true);
-
     setTimeout(() => {
-      setFlipped(false);
-      setSelectedAnswer(null);
-      setIsCorrect(null);
-      setQuizIndex((prev) => prev + 1);
-    }, 1000);
+      setFlipped(true);
+    }, 100);
+    // setFlipped(true);
+
+    // setTimeout(() => {
+    //   setFlipped(false);
+    //   setSelectedAnswer(null);
+    //   setIsCorrect(null);
+    //   setQuizIndex((prev) => prev + 1);
+    // }, 1000);
+  }
+
+  function handleNext() {
+    setFlipped(false);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+    setQuizIndex((prev) => prev + 1);
   }
 
   return (
@@ -136,11 +146,16 @@ export default function LimitedMode() {
 
           <div style={{ marginTop: '1rem' }}>
             <button onClick={handleShowAnswer}>정답 보기</button>
+
             {alertVisible && (
               <div style={{ color: 'red', marginTop: '1rem' }}>
                 ⚠️ 보기를 먼저 선택해주세요.
               </div>
             )}
+
+            <button onClick={handleNext} disabled={!flipped}>
+              다음 문제
+            </button>
           </div>
 
           {isQuizFinished && (
