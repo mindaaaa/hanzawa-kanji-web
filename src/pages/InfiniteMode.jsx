@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { buildApiUrl } from '../utils/queryHelpers.js';
 import QuestionCard from '../components/QuestionCard.jsx';
 import { shuffle } from '../utils/shuffle.js';
+import ResultSummary from '../components/ResultSummary.jsx';
 
 export default function InfiniteMode() {
   const [quizList, setQuizList] = useState([]);
@@ -11,21 +12,34 @@ export default function InfiniteMode() {
   const [isCorrect, setIsCorrect] = useState(null);
   const [flipped, setFlipped] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+
+  const [isEnded, setIsEnded] = useState(false);
+  const [cursor, setCursor] = useState(undefined);
+  const [hasMore, setHasMore] = useState(true);
 
   const quizIdRef = useRef(crypto.randomUUID());
+  const isLastQuestion = quizIndex === quizList.length - 1;
+  const isQuizFinished = isLastQuestion && flipped;
 
   const fetchQuizList = async () => {
-    if (loading) return;
+    if (loading || !hasMore) return;
     setLoading(true);
 
     try {
       const url = buildApiUrl({
         quizId: quizIdRef.current,
         mode: 'RANDOM',
+        cursor,
       });
 
       const data = await fetch(url).then((res) => res.json());
-      setQuizList(shuffle(data.items));
+
+      setQuizList((prev) => [...prev, ...shuffle(data.items)]);
+      setCursor(data.cursor);
+      if (!data.cursor) {
+        setHasMore(false);
+      }
     } catch (error) {
       console.error('문제 불러오기 실패💥', error);
     } finally {
@@ -36,6 +50,12 @@ export default function InfiniteMode() {
   useEffect(() => {
     fetchQuizList();
   }, []);
+
+  useEffect(() => {
+    if (quizList.length > 0 && quizIndex >= quizList.length - 5) {
+      fetchQuizList();
+    }
+  }, [quizIndex, quizList]);
 
   const currentQuiz = quizList[quizIndex];
 
@@ -58,6 +78,7 @@ export default function InfiniteMode() {
   }, [currentQuiz, quizList]);
 
   const handleAnswerClick = (choice) => {
+    // if (selectedAnswer !== null) return;
     setSelectedAnswer(choice);
   };
 
@@ -70,6 +91,9 @@ export default function InfiniteMode() {
 
     const correct = selectedAnswer.id === currentQuiz.id;
     setIsCorrect(correct);
+    if (correct) {
+      setCorrectCount((prev) => prev + 1);
+    }
     setTimeout(() => {
       setFlipped(true);
     }, 100);
@@ -86,6 +110,10 @@ export default function InfiniteMode() {
     setIsCorrect(null);
     setFlipped(false);
   };
+
+  function handleEndQuiz() {
+    setIsEnded(true);
+  }
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -125,6 +153,30 @@ export default function InfiniteMode() {
             </button>
           </div>
         </>
+      )}
+
+      <button
+        onClick={handleEndQuiz}
+        style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          fontSize: '0.9rem',
+          padding: '0.4rem 0.8rem',
+          backgroundColor: '#f5f5f5',
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+      >
+        그만하기
+      </button>
+      {(isQuizFinished || isEnded) && (
+        <ResultSummary
+          total={quizIndex + 1}
+          correct={correctCount}
+          onRestart={() => window.location.reload()}
+        />
       )}
     </div>
   );
