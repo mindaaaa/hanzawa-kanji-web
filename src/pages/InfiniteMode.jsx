@@ -35,7 +35,7 @@ export default function InfiniteMode() {
 
       const data = await fetch(url).then((res) => res.json());
 
-      setQuizList((prev) => [...prev, ...shuffle(data.items)]);
+      setQuizList((prev) => [...prev, ...data.items]);
       setCursor(data.cursor);
       if (!data.cursor) {
         setHasMore(false);
@@ -63,19 +63,60 @@ export default function InfiniteMode() {
     if (!currentQuiz || quizList.length === 0) return [];
 
     const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
-    const choices = shuffle(filtered).slice(0, 3);
+    const choices = shuffle(filtered).slice(0, 10);
+
+    const rawChoices = [currentQuiz, ...choices];
 
     const formatChoice = (kanji) => {
       const { korean } = kanji;
-      const { kun = '-', on = '-' } = shuffle(korean)[0] || {};
+      const meaning = shuffle(korean[0]);
+      const { kun = '-', on = '-' } = meaning || {};
+      const display = `${kun} / ${on}`;
+
       return {
         ...kanji,
-        display: [`${kun} / ${on}`],
+        display,
       };
     };
 
-    return shuffle([currentQuiz, ...choices]).map(formatChoice);
+    const uniqueChoices = [];
+    const displaySet = new Set();
+
+    for (const kanji of rawChoices) {
+      const formatted = formatChoice(kanji);
+
+      if (!displaySet.has(formatted.display)) {
+        displaySet.add(formatted.display);
+        uniqueChoices.push(formatted);
+      }
+
+      if (uniqueChoices.length >= 4) break;
+    }
+
+    return shuffle(uniqueChoices);
   }, [currentQuiz, quizList]);
+
+  // id 기준으로 중복 제거
+  // display 기준으로 중복 제거
+
+  // if (!currentQuiz || quizList.length === 0) return [];
+
+  // const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
+  // const choices = shuffle(filtered).slice(0, 3);
+
+  // const rawChoices = shuffle([currentQuiz, ...choices]);
+
+  // const formatChoice = (kanji) => {
+  //   const { korean } = kanji;
+  //   const meaning = korean?.[0];
+  //   const { kun = '-', on = '-' } = meaning || {};
+  //   return {
+  //     ...kanji,
+  //     display: [`${kun} / ${on}`],
+  //   };
+  // };
+
+  // return rawChoices.map(formatChoice);
 
   const handleAnswerClick = (choice) => {
     // if (selectedAnswer !== null) return;
