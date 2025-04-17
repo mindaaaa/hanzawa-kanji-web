@@ -17,6 +17,7 @@ export default function InfiniteMode() {
   const [isEnded, setIsEnded] = useState(false);
   const [cursor, setCursor] = useState(undefined);
   const [hasMore, setHasMore] = useState(true);
+  const [answeredCount, setAnsweredCount] = useState(0);
 
   const quizIdRef = useRef(crypto.randomUUID());
   const isLastQuestion = quizIndex === quizList.length - 1;
@@ -35,7 +36,12 @@ export default function InfiniteMode() {
 
       const data = await fetch(url).then((res) => res.json());
 
-      setQuizList((prev) => [...prev, ...data.items]);
+      setQuizList((prev) => {
+        const existingIds = new Set(prev.map((item) => item.id));
+        const newItems = data.items.filter((item) => !existingIds.has(item.id));
+        return [...prev, ...shuffle(newItems)];
+      });
+
       setCursor(data.cursor);
       if (!data.cursor) {
         setHasMore(false);
@@ -47,6 +53,7 @@ export default function InfiniteMode() {
     }
   };
 
+  // TODO: 이 부분에서 중복 id가 들어오는지 확인
   useEffect(() => {
     fetchQuizList();
   }, []);
@@ -64,14 +71,15 @@ export default function InfiniteMode() {
 
     const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
     const choices = shuffle(filtered).slice(0, 10);
+    console.log(choices);
 
     const rawChoices = [currentQuiz, ...choices];
 
     const formatChoice = (kanji) => {
       const { korean } = kanji;
-      const meaning = shuffle(korean[0]);
-      const { kun = '-', on = '-' } = meaning || {};
-      const display = `${kun} / ${on}`;
+      const shuffled = shuffle(korean);
+      const { kun = '-', on = '-' } = shuffled[0] || {};
+      const display = [`${kun} / ${on}`];
 
       return {
         ...kanji,
@@ -80,15 +88,18 @@ export default function InfiniteMode() {
     };
 
     const uniqueChoices = [];
-    const displaySet = new Set();
+    const seenDisplay = new Set();
+    const seenIds = new Set();
 
     for (const kanji of rawChoices) {
       const formatted = formatChoice(kanji);
 
-      if (!displaySet.has(formatted.display)) {
-        displaySet.add(formatted.display);
-        uniqueChoices.push(formatted);
-      }
+      if (seenIds.has(formatted.id) || seenDisplay.has(formatted.display))
+        break;
+
+      seenDisplay.add(formatted.display);
+      seenIds.add(formatted.id);
+      uniqueChoices.push(formatted);
 
       if (uniqueChoices.length >= 4) break;
     }
@@ -132,9 +143,13 @@ export default function InfiniteMode() {
 
     const correct = selectedAnswer.id === currentQuiz.id;
     setIsCorrect(correct);
+
     if (correct) {
       setCorrectCount((prev) => prev + 1);
     }
+
+    setAnsweredCount((prev) => prev + 1);
+
     setTimeout(() => {
       setFlipped(true);
     }, 100);
@@ -161,7 +176,7 @@ export default function InfiniteMode() {
       {loading && <p>🐢 로딩 중...</p>}
       {!loading && currentQuiz && (
         <>
-          <h2>무한 퀴즈 모드 🔁</h2>
+          <h2>무한 퀴즈 모드 ♾️</h2>
 
           <QuestionCard
             currentQuiz={currentQuiz}
@@ -214,7 +229,7 @@ export default function InfiniteMode() {
       </button>
       {(isQuizFinished || isEnded) && (
         <ResultSummary
-          total={quizIndex + 1}
+          total={answeredCount}
           correct={correctCount}
           onRestart={() => window.location.reload()}
         />
