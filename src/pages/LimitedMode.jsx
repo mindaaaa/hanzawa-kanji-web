@@ -1,113 +1,35 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { fetchQuizItems } from '../shared/api/fetchQuizItems.js';
+import React, { useState, useEffect } from 'react';
 import ChoiceButtons from '../components/ChoiceButtons.jsx';
 import ResultSummary from '../components/ResultSummary.jsx';
-import { shuffle } from '../utils/shuffle.js';
 import QuestionCard from '../components/QuestionCard.jsx';
+import useQuizEngine from '../shared/hooks/useQuizEngine.js';
 
 export default function LimitedMode() {
-  const [quizList, setQuizList] = useState([]);
-  const [quizIndex, setQuizIndex] = useState(0);
-  const [error, setError] = useState(null);
-  const [flipped, setFlipped] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [quizLimit, setQuizLimit] = useState(null);
-  const [isCorrect, setIsCorrect] = useState(null);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [alertVisible, setAlertVisible] = useState(false);
-
-  const quizIdRef = useRef(crypto.randomUUID());
-
-  const isLastQuestion = quizIndex === quizList.length - 1;
-  const isQuizFinished = isLastQuestion && flipped;
-
-  const fetchQuizList = async () => {
-    if (loading) return;
-    setLoading(true);
-
-    try {
-      const data = await fetchQuizItems({
-        quizId: quizIdRef.current,
-        mode: 'RANDOM',
-        limit: quizLimit,
-      });
-
-      setQuizList(data.items);
-    } catch (error) {
-      console.error('문제 불러오기 실패😨', error);
-      setError('⚠️ 문제 불러오기 실패, 다시 시도해주세요🙇‍♂️');
-      setQuizList([]);
-      setQuizIndex(0);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    loading,
+    error,
+    quizList,
+    quizIndex,
+    currentQuiz,
+    allChoices,
+    selectedAnswer,
+    isCorrect,
+    flipped,
+    alertVisible,
+    correctCount,
+    isQuizFinished,
+    handleAnswerClick,
+    handleShowAnswer,
+    handleNext,
+    fetchQuiz,
+  } = useQuizEngine({ quizLimit });
 
   useEffect(() => {
     if (quizLimit !== null) {
-      fetchQuizList();
+      fetchQuiz();
     }
   }, [quizLimit]);
-
-  const currentQuiz = quizList[quizIndex];
-
-  const allChoices = useMemo(() => {
-    if (!currentQuiz || quizList.length === 0) return [];
-
-    const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
-    const choices = shuffle(filtered).slice(0, 3);
-
-    const formatChoice = (kanji) => {
-      const { korean } = kanji;
-      const { kun = '-', on = '-' } = shuffle(korean)[0] || {};
-      const display = [`${kun} / ${on}`];
-
-      return {
-        ...kanji,
-        display,
-      };
-    };
-
-    return shuffle([currentQuiz, ...choices]).map(formatChoice);
-  }, [currentQuiz, quizList]);
-
-  function handleAnswerClick(choice) {
-    setSelectedAnswer(choice);
-  }
-
-  function handleShowAnswer() {
-    if (!selectedAnswer) {
-      setAlertVisible(true);
-      setTimeout(() => setAlertVisible(false), 1000);
-      return;
-    }
-
-    const correct = selectedAnswer.id === currentQuiz.id;
-    setIsCorrect(correct);
-    if (correct) {
-      setCorrectCount((prev) => prev + 1);
-    }
-
-    setTimeout(() => {
-      setFlipped(true);
-    }, 100);
-    // setFlipped(true);
-
-    // setTimeout(() => {
-    //   setFlipped(false);
-    //   setSelectedAnswer(null);
-    //   setIsCorrect(null);
-    //   setQuizIndex((prev) => prev + 1);
-    // }, 1000);
-  }
-
-  function handleNext() {
-    setFlipped(false);
-    setSelectedAnswer(null);
-    setIsCorrect(null);
-    setQuizIndex((prev) => prev + 1);
-  }
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
