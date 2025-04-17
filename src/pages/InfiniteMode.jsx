@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-// import { buildApiUrl } from '../utils/queryHelpers.js';
 import { fetchQuizItems } from '../shared/api/fetchQuizItems.js';
 import QuestionCard from '../components/QuestionCard.jsx';
 import { shuffle } from '../utils/shuffle.js';
@@ -9,6 +8,7 @@ export default function InfiniteMode() {
   const [quizList, setQuizList] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isCorrect, setIsCorrect] = useState(null);
   const [flipped, setFlipped] = useState(false);
@@ -31,7 +31,6 @@ export default function InfiniteMode() {
     try {
       const data = await fetchQuizItems({
         quizId: quizIdRef.current,
-        mode: 'RANDOM',
         cursor,
       });
 
@@ -47,6 +46,7 @@ export default function InfiniteMode() {
       }
     } catch (err) {
       console.error('문제 불러오기 실패💥', err);
+      setError('⚠️ 문제 불러오기 실패, 다시 시도해주세요🙇‍♂️');
     } finally {
       setLoading(false);
     }
@@ -106,30 +106,7 @@ export default function InfiniteMode() {
     return shuffle(uniqueChoices);
   }, [currentQuiz, quizList]);
 
-  // id 기준으로 중복 제거
-  // display 기준으로 중복 제거
-
-  // if (!currentQuiz || quizList.length === 0) return [];
-
-  // const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
-  // const choices = shuffle(filtered).slice(0, 3);
-
-  // const rawChoices = shuffle([currentQuiz, ...choices]);
-
-  // const formatChoice = (kanji) => {
-  //   const { korean } = kanji;
-  //   const meaning = korean?.[0];
-  //   const { kun = '-', on = '-' } = meaning || {};
-  //   return {
-  //     ...kanji,
-  //     display: [`${kun} / ${on}`],
-  //   };
-  // };
-
-  // return rawChoices.map(formatChoice);
-
   const handleAnswerClick = (choice) => {
-    // if (selectedAnswer !== null) return;
     setSelectedAnswer(choice);
   };
 
@@ -173,6 +150,7 @@ export default function InfiniteMode() {
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
       {loading && <p>🐢 로딩 중...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       {!loading && currentQuiz && (
         <>
           <h2>무한 퀴즈 모드 ♾️</h2>

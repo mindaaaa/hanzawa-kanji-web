@@ -1,6 +1,11 @@
 import { buildApiUrl } from '../../utils/queryHelpers.js';
 
-export async function fetchQuizItems({ quizId, mode, limit, cursor }) {
+export async function fetchQuizItems({
+  quizId,
+  mode = 'RANDOM',
+  limit,
+  cursor,
+}) {
   const url = buildApiUrl({
     quizId,
     mode,

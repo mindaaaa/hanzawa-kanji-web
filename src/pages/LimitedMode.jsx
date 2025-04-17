@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { buildApiUrl } from '../utils/queryHelpers.js';
+import { fetchQuizItems } from '../shared/api/fetchQuizItems.js';
 import ChoiceButtons from '../components/ChoiceButtons.jsx';
 import ResultSummary from '../components/ResultSummary.jsx';
 import { shuffle } from '../utils/shuffle.js';
@@ -27,12 +27,10 @@ export default function LimitedMode() {
     setLoading(true);
 
     try {
-      const url = buildApiUrl({
+      const data = await fetchQuizItems({
         quizId: quizIdRef.current,
-        mode: 'RANDOM',
         limit: quizLimit,
       });
-      const data = await fetch(url).then((res) => res.json());
 
       setQuizList(data.items);
     } catch (error) {
