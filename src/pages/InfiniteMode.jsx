@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { buildApiUrl } from '../utils/queryHelpers.js';
+// import { buildApiUrl } from '../utils/queryHelpers.js';
+import { fetchQuizItems } from '../shared/api/fetchQuizItems.js';
 import QuestionCard from '../components/QuestionCard.jsx';
 import { shuffle } from '../utils/shuffle.js';
 import ResultSummary from '../components/ResultSummary.jsx';
@@ -28,13 +29,11 @@ export default function InfiniteMode() {
     setLoading(true);
 
     try {
-      const url = buildApiUrl({
+      const data = await fetchQuizItems({
         quizId: quizIdRef.current,
         mode: 'RANDOM',
         cursor,
       });
-
-      const data = await fetch(url).then((res) => res.json());
 
       setQuizList((prev) => {
         const existingIds = new Set(prev.map((item) => item.id));
@@ -46,8 +45,8 @@ export default function InfiniteMode() {
       if (!data.cursor) {
         setHasMore(false);
       }
-    } catch (error) {
-      console.error('문제 불러오기 실패💥', error);
+    } catch (err) {
+      console.error('문제 불러오기 실패💥', err);
     } finally {
       setLoading(false);
     }
