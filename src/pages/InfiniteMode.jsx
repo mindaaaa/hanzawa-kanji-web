@@ -31,6 +31,7 @@ export default function InfiniteMode() {
     try {
       const data = await fetchQuizItems({
         quizId: quizIdRef.current,
+        mode: 'RANDOM',
         cursor,
       });
 

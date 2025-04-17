@@ -29,6 +29,7 @@ export default function LimitedMode() {
     try {
       const data = await fetchQuizItems({
         quizId: quizIdRef.current,
+        mode: 'RANDOM',
         limit: quizLimit,
       });
 

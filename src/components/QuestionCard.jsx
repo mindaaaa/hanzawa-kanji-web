@@ -24,6 +24,13 @@ export default function QuestionCard({
               <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>
                 {currentQuiz.value}
               </div>
+              <div>
+                {currentQuiz.korean.map((item, i) => (
+                  <div key={i}>
+                    {item.kun} {item.on}
+                  </div>
+                ))}
+              </div>
               <ReadingRow
                 type='kun'
                 label='훈'
