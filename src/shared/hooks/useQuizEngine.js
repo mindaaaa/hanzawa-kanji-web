@@ -1,7 +1,8 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { fetchQuizItems } from '../api/fetchQuizItems.js';
 import { shuffle } from '../../utils/shuffle.js';
 
+// TODO: constants화 처리
 export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
   /* 공통 상태 */
   const [quizList, setQuizList] = useState([]);
@@ -106,6 +107,32 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
 
     return shuffle(uniqueChoices);
   }, [currentQuiz, quizList, choicePool]);
+
+  useEffect(() => {
+    const shouldRefetchPool = answeredCount > 0 && answeredCount % 50 === 0;
+
+    if (shouldRefetchPool && !loading) {
+      const fetchMoreChoices = async () => {
+        try {
+          const data = await fetchQuizItems({
+            mode: 'RANDOM',
+            limit: 100,
+          });
+
+          const existingIds = new Set(choicePool.map((item) => item.id));
+          const newItems = data.items.filter(
+            (item) => !existingIds.has(item.id)
+          );
+
+          setChoicePool((prev) => [...prev, ...shuffle(newItems)]);
+        } catch (err) {
+          console.error('⚠️ 보기 후보 추가에 실패했습니다.', err);
+        }
+      };
+
+      fetchMoreChoices();
+    }
+  }, [answeredCount, loading, choicePool]);
 
   const handleAnswerClick = (choice) => {
     setSelectedAnswer(choice);
