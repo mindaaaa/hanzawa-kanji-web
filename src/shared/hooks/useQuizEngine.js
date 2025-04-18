@@ -13,6 +13,7 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
   const [isCorrect, setIsCorrect] = useState(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [choicePool, setChoicePool] = useState([]);
 
   /* INFINITEMODE 관련 상태*/
   const [isEnded, setIsEnded] = useState(false);
@@ -43,6 +44,14 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
         return [...prev, ...shuffle(newItems)];
       });
 
+      if (choicePool.length < 200) {
+        const poolData = await fetchQuizItems({ mode: 'RANDOM', limit: 200 });
+        const newChoices = poolData.items.filter(
+          (item) => !choicePool.some((existing) => existing.id === item.id)
+        );
+        setChoicePool((prev) => [...prev, ...shuffle(newChoices)]);
+      }
+
       if (mode === 'INFINITE') {
         setCursor(data.cursor);
         if (!data.cursor) {
@@ -61,7 +70,7 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
     const isQuizUnavailable = !currentQuiz || quizList.length === 0;
     if (isQuizUnavailable) return [];
 
-    const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
+    const filtered = choicePool.filter((item) => item.id !== currentQuiz.id);
     const choices = shuffle(filtered).slice(0, 10);
 
     const rawChoices = [currentQuiz, ...choices];
@@ -96,7 +105,7 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
     }
 
     return shuffle(uniqueChoices);
-  }, [currentQuiz, quizList]);
+  }, [currentQuiz, quizList, choicePool]);
 
   const handleAnswerClick = (choice) => {
     setSelectedAnswer(choice);
