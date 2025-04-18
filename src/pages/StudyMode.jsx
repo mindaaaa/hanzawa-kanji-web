@@ -3,11 +3,9 @@ import styles from '../shared/css/StudyMode.module.css';
 import React, { useEffect, useState } from 'react';
 import { FixedSizeGrid } from 'react-window';
 import { fetchKanjiItems } from '../shared/api/fetchKanjiItems.js';
+import { Card, RESIZE_THROTTLE_DELAY } from '../shared/constants/index.js';
 
 export default function StudyMode() {
-  const CARD_WIDTH = 220;
-  const CARD_HEIGHT = 300;
-
   const [items, setItems] = useState([]);
   const [cursor, setCursor] = useState(undefined);
   const [loading, setLoading] = useState(false);
@@ -22,13 +20,13 @@ export default function StudyMode() {
         width: window.innerWidth,
         height: window.innerHeight,
       });
-    }, 300);
+    }, RESIZE_THROTTLE_DELAY);
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const COLUMN_COUNT = Math.max(1, Math.floor(windowSize.width / CARD_WIDTH));
+  const COLUMN_COUNT = Math.max(1, Math.floor(windowSize.width / Card.WIDTH));
   const ROW_COUNT = Math.ceil(items.length / COLUMN_COUNT);
 
   const fetchKanji = async () => {
@@ -67,8 +65,8 @@ export default function StudyMode() {
         className={styles.list}
         columnCount={COLUMN_COUNT}
         rowCount={ROW_COUNT}
-        columnWidth={CARD_WIDTH}
-        rowHeight={CARD_HEIGHT}
+        columnWidth={Card.WIDTH}
+        rowHeight={Card.HEIGHT}
         width={windowSize.width}
         height={windowSize.height}
         onItemsRendered={({ visibleRowStopIndex }) => {
