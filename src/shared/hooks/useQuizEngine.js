@@ -1,9 +1,10 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { fetchQuizItems } from '../api/fetchQuizItems.js';
 import { shuffle } from '../../utils/shuffle.js';
+import { Choice, Mode } from '../constants/index.js';
 
 // TODO: constants화 처리
-export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
+export default function useQuizEngine({ mode = Mode.LIMITED, quizLimit }) {
   /* 공통 상태 */
   const [quizList, setQuizList] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -29,7 +30,7 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
 
   const ensureChoicePool = async (limit = 100) => {
     try {
-      const data = await fetchQuizItems({ mode: 'RANDOM', limit });
+      const data = await fetchQuizItems({ mode: Mode.RANDOM, limit });
       const existingIds = new Set(choicePool.map((item) => item.id));
       const newItems = data.items.filter((item) => !existingIds.has(item.id));
       setChoicePool((prev) => [...prev, ...shuffle(newItems)]);
@@ -39,15 +40,15 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
   };
 
   const fetchQuiz = async () => {
-    if (loading || (mode === 'INFINITE' && !hasMore)) return;
+    if (loading || (mode === Mode.INFINITE && !hasMore)) return;
     setLoading(true);
 
     try {
       const data = await fetchQuizItems({
         quizId: quizIdRef.current,
-        mode: 'RANDOM',
-        ...(mode === 'LIMITED' && { limit: quizLimit }),
-        ...(mode === 'INFINITE' && { cursor }),
+        mode: Mode.RANDOM,
+        ...(mode === Mode.LIMITED && { limit: quizLimit }),
+        ...(mode === Mode.INFINITE && { cursor }),
       });
 
       setQuizList((prev) => {
@@ -56,9 +57,9 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
         return [...prev, ...shuffle(newItems)];
       });
 
-      await ensureChoicePool(200);
+      await ensureChoicePool(Choice.INITIAL_SIZE);
 
-      if (mode === 'INFINITE') {
+      if (mode === Mode.INFINITE) {
         setCursor(data.cursor);
         if (!data.cursor) {
           setHasMore(false);
@@ -77,7 +78,7 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
     if (isQuizUnavailable) return [];
 
     const filtered = choicePool.filter((item) => item.id !== currentQuiz.id);
-    const choices = shuffle(filtered).slice(0, 10);
+    const choices = shuffle(filtered).slice(0, Choice.CANDIDATE_COUNT);
 
     const rawChoices = [currentQuiz, ...choices];
 
@@ -107,7 +108,7 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
       seenIds.add(formatted.id);
       uniqueChoices.push(formatted);
 
-      if (uniqueChoices.length >= 4) break;
+      if (uniqueChoices.length >= Choice.VISIBLE_COUNT) break;
     }
 
     return shuffle(uniqueChoices);
@@ -156,11 +157,12 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
   }
 
   useEffect(() => {
-    const shouldRefetchPool = answeredCount > 0 && answeredCount % 50 === 0;
+    const shouldRefetchPool =
+      answeredCount > 0 && answeredCount % Choice.REPLENISH_INTERVAL === 0;
 
     if (shouldRefetchPool && !loading) {
       const fetchMore = async () => {
-        await ensureChoicePool(200);
+        await ensureChoicePool(Choice.INITIAL_SIZE);
       };
       fetchMore();
     }
