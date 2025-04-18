@@ -27,6 +27,17 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
   const isQuizFinished = isLastQuestion && flipped;
   const currentQuiz = quizList[quizIndex];
 
+  const ensureChoicePool = async (limit = 100) => {
+    try {
+      const data = await fetchQuizItems({ mode: 'RANDOM', limit });
+      const existingIds = new Set(choicePool.map((item) => item.id));
+      const newItems = data.items.filter((item) => !existingIds.has(item.id));
+      setChoicePool((prev) => [...prev, ...shuffle(newItems)]);
+    } catch (err) {
+      console.error('⚠️ 보기 후보에 추가 실패했습니다.', err);
+    }
+  };
+
   const fetchQuiz = async () => {
     if (loading || (mode === 'INFINITE' && !hasMore)) return;
     setLoading(true);
@@ -45,13 +56,7 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
         return [...prev, ...shuffle(newItems)];
       });
 
-      if (choicePool.length < 200) {
-        const poolData = await fetchQuizItems({ mode: 'RANDOM', limit: 200 });
-        const newChoices = poolData.items.filter(
-          (item) => !choicePool.some((existing) => existing.id === item.id)
-        );
-        setChoicePool((prev) => [...prev, ...shuffle(newChoices)]);
-      }
+      await ensureChoicePool(200);
 
       if (mode === 'INFINITE') {
         setCursor(data.cursor);
@@ -108,32 +113,6 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
     return shuffle(uniqueChoices);
   }, [currentQuiz, quizList, choicePool]);
 
-  useEffect(() => {
-    const shouldRefetchPool = answeredCount > 0 && answeredCount % 50 === 0;
-
-    if (shouldRefetchPool && !loading) {
-      const fetchMoreChoices = async () => {
-        try {
-          const data = await fetchQuizItems({
-            mode: 'RANDOM',
-            limit: 100,
-          });
-
-          const existingIds = new Set(choicePool.map((item) => item.id));
-          const newItems = data.items.filter(
-            (item) => !existingIds.has(item.id)
-          );
-
-          setChoicePool((prev) => [...prev, ...shuffle(newItems)]);
-        } catch (err) {
-          console.error('⚠️ 보기 후보 추가에 실패했습니다.', err);
-        }
-      };
-
-      fetchMoreChoices();
-    }
-  }, [answeredCount, loading, choicePool]);
-
   const handleAnswerClick = (choice) => {
     setSelectedAnswer(choice);
   };
@@ -175,6 +154,17 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
   function handleEndQuiz() {
     setIsEnded(true);
   }
+
+  useEffect(() => {
+    const shouldRefetchPool = answeredCount > 0 && answeredCount % 50 === 0;
+
+    if (shouldRefetchPool && !loading) {
+      const fetchMore = async () => {
+        await ensureChoicePool(200);
+      };
+      fetchMore();
+    }
+  }, [answeredCount, loading, choicePool]);
 
   return {
     loading,
