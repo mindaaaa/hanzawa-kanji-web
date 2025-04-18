@@ -32,7 +32,9 @@ export default function InfiniteMode() {
   }, []);
 
   useEffect(() => {
-    if (quizList.length > 0 && quizIndex >= quizList.length - 5) {
+    const shouldPrefetchMore =
+      quizList.length > 0 && quizIndex >= quizList.length - 5;
+    if (shouldPrefetchMore) {
       fetchQuiz();
     }
   }, [quizIndex, quizList]);

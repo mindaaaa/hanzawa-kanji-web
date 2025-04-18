@@ -3,6 +3,7 @@ import { fetchQuizItems } from '../api/fetchQuizItems.js';
 import { shuffle } from '../../utils/shuffle.js';
 
 export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
+  /* 공통 상태 */
   const [quizList, setQuizList] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -13,16 +14,15 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
   const [correctCount, setCorrectCount] = useState(0);
   const [alertVisible, setAlertVisible] = useState(false);
 
+  /* INFINITEMODE 관련 상태*/
   const [isEnded, setIsEnded] = useState(false);
   const [cursor, setCursor] = useState(undefined);
   const [hasMore, setHasMore] = useState(true);
   const [answeredCount, setAnsweredCount] = useState(0);
 
   const quizIdRef = useRef(crypto.randomUUID());
-
   const isLastQuestion = quizIndex === quizList.length - 1;
   const isQuizFinished = isLastQuestion && flipped;
-
   const currentQuiz = quizList[quizIndex];
 
   const fetchQuiz = async () => {
@@ -57,19 +57,9 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
     }
   };
 
-  //   // TODO: 이 부분에서 중복 id가 들어오는지 확인
-  //   useEffect(() => {
-  //     fetchQuizList();
-  //   }, []);
-
-  //   useEffect(() => {
-  //     if (quizList.length > 0 && quizIndex >= quizList.length - 5) {
-  //       fetchQuizList();
-  //     }
-  //   }, [quizIndex, quizList]);
-
   const allChoices = useMemo(() => {
-    if (!currentQuiz || quizList.length === 0) return [];
+    const isQuizUnavailable = !currentQuiz || quizList.length === 0;
+    if (isQuizUnavailable) return [];
 
     const filtered = quizList.filter((item) => item.id !== currentQuiz.id);
     const choices = shuffle(filtered).slice(0, 10);
@@ -94,9 +84,9 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
 
     for (const kanji of rawChoices) {
       const formatted = formatChoice(kanji);
-
-      if (seenIds.has(formatted.id) || seenDisplay.has(formatted.display))
-        break;
+      const isDuplicateChoice =
+        seenIds.has(formatted.id) || seenDisplay.has(formatted.display);
+      if (isDuplicateChoice) break;
 
       seenDisplay.add(formatted.display);
       seenIds.add(formatted.id);
@@ -119,7 +109,8 @@ export default function useQuizEngine({ mode = 'LIMITED', quizLimit }) {
       return;
     }
 
-    const correct = selectedAnswer.id === currentQuiz.id;
+    const isAnswerCorrect = selectedAnswer.id === currentQuiz.id;
+    const correct = isAnswerCorrect;
     setIsCorrect(correct);
 
     if (correct) {
