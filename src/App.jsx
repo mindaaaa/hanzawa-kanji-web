@@ -4,12 +4,13 @@ import Home from './pages/Home.jsx';
 import InfiniteMode from './pages/InfiniteMode.jsx';
 import LimitedMode from './pages/LimitedMode.jsx';
 import StudyMode from './pages/StudyMode.jsx';
+import styles from './App.module.css';
 
 function App() {
   return (
     <>
       <Topbar />
-      <main>
+      <main className={styles.main}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/study" element={<StudyMode />} />

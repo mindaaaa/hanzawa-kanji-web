@@ -1,19 +1,32 @@
 .wrap {
-  max-width: 1100px;
+  max-width: 880px;
   margin: 0 auto;
   padding: 40px 24px;
-  min-height: calc(100dvh - var(--topbar-height));
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.grid {
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 48px;
-  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: stretch;
 }
 
 /* ── 좌측 프로즈 ── */
+.prose {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 440px;
+}
+
 .title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(54px, 7vw, 80px);
+  font-size: clamp(54px, 7vw, 84px);
   line-height: 0.95;
   letter-spacing: -0.03em;
   margin: 0;
@@ -23,12 +36,14 @@
   font-style: normal;
   color: var(--coral);
   text-decoration: underline wavy var(--cobalt);
-  text-underline-offset: 8px;
+  text-underline-offset: 12px;
+  text-decoration-thickness: 4px;
 }
 
 .marker {
   display: inline-block;
-  margin-top: 20px;
+  align-self: flex-start;
+  margin-top: 36px;
   font-family: var(--font-hand);
   font-weight: 700;
   font-size: 22px;
@@ -48,17 +63,18 @@
 /* ── 우측 옵션 ── */
 .opts {
   display: grid;
-  gap: 14px;
+  grid-auto-rows: 1fr;
+  gap: 16px;
 }
 
 .opt {
   all: unset;
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: 90px 1fr;
+  grid-template-columns: 110px 1fr;
   align-items: center;
-  gap: 20px;
-  padding: 20px 24px;
+  gap: 24px;
+  padding: 24px 28px;
   background: var(--paper-hi);
   border: var(--border);
   box-shadow: var(--shadow-md);
@@ -91,7 +107,7 @@
 
 .big {
   font-family: var(--font-display);
-  font-size: 72px;
+  font-size: 84px;
   line-height: 1;
   color: var(--cobalt);
   letter-spacing: -0.04em;
@@ -105,7 +121,7 @@
   display: block;
   font-family: var(--font-hand);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 24px;
   color: var(--coral);
   line-height: 1.1;
 }
@@ -113,28 +129,32 @@
 .sub {
   display: block;
   font-family: var(--font-ko);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-soft);
-  margin-top: 4px;
+  margin-top: 6px;
   line-height: 1.4;
 }
 
 @media (max-width: 860px) {
   .wrap {
+    padding: 24px 16px;
+  }
+  .grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 24px;
+  }
+  .prose {
     min-height: auto;
-    padding: 24px 16px 32px;
   }
   .title {
     font-size: clamp(40px, 10vw, 60px);
   }
   .opt {
-    grid-template-columns: 70px 1fr;
-    padding: 16px 20px;
+    grid-template-columns: 80px 1fr;
+    padding: 18px 22px;
     gap: 16px;
   }
   .big {
-    font-size: 56px;
+    font-size: 60px;
   }
 }
