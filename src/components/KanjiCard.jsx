@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from '../shared/css/KanjiCard.module.css';
+import styles from './KanjiCard.module.css';
 import ReadingRow from './ReadingRow.jsx';
 
 const areEqual = (prev, next) => {
@@ -7,7 +7,7 @@ const areEqual = (prev, next) => {
 };
 
 function KanjiCard({ kanji, flipped: flippedProp, onClick, backContent }) {
-  const [internalFlip, setInternlFlip] = useState(false);
+  const [internalFlip, setInternalFlip] = useState(false);
   const isControlled = flippedProp !== undefined;
   const flipped = isControlled ? flippedProp : internalFlip;
 
@@ -16,7 +16,7 @@ function KanjiCard({ kanji, flipped: flippedProp, onClick, backContent }) {
       <div
         className={`${styles.card} ${flipped ? styles.flipped : ''}`}
         onClick={() => {
-          if (!isControlled) setInternlFlip((prev) => !prev);
+          if (!isControlled) setInternalFlip((prev) => !prev);
           if (onClick) return onClick();
         }}
       >

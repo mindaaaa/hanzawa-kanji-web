@@ -1,5 +1,5 @@
 import KanjiCard from '../components/KanjiCard.jsx';
-import styles from '../shared/css/StudyMode.module.css';
+import styles from './StudyMode.module.css';
 import React, { useEffect, useState } from 'react';
 import { FixedSizeGrid } from 'react-window';
 import { fetchKanjiItems } from '../shared/api/fetchKanjiItems.js';
