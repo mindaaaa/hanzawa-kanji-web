@@ -1,0 +1,103 @@
+.choice {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 22px;
+  background: var(--paper-hi);
+  border: var(--border);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  font-family: var(--font-body);
+}
+
+.choice:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.choice:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.choice:disabled {
+  cursor: default;
+}
+
+.letter {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--coral);
+}
+
+.text {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* ── picked: 선택됐으나 아직 공개 전 ── */
+.picked {
+  background: var(--cobalt);
+  color: var(--paper);
+  transform: rotate(-1deg) translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+}
+.picked .letter {
+  color: var(--marigold);
+}
+.picked:hover:not(:disabled) {
+  transform: rotate(-1deg) translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── correct: 정답 공개 ── */
+.correct {
+  background: var(--marigold);
+  color: var(--ink);
+  transform: rotate(-1deg);
+  box-shadow: var(--shadow-accent);
+}
+.correct .letter {
+  color: var(--coral);
+}
+.correct::after {
+  content: '✓ 정답!';
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--coral);
+  justify-self: end;
+}
+
+/* ── wrong: 내가 골랐지만 틀림 ── */
+.wrong {
+  background: var(--paper-shade);
+  color: var(--ink-soft);
+  box-shadow: var(--shadow-xs);
+}
+.wrong .letter {
+  color: var(--ink-soft);
+}
+.wrong .text {
+  text-decoration: line-through;
+}
+.wrong::after {
+  content: '✗';
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--coral);
+  justify-self: end;
+}
+
+/* ── faded: 공개 후 내가 안 고른 오답 ── */
+.faded {
+  opacity: 0.4;
+}

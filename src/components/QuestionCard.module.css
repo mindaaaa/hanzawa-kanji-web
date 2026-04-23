@@ -1,0 +1,29 @@
+.card {
+  display: grid;
+  grid-template-columns: 240px 400px;
+  gap: 40px;
+  justify-content: center;
+  align-items: start;
+}
+
+.kanjiSlot {
+  width: 240px;
+  max-width: 100%;
+}
+
+.choices {
+  display: grid;
+  gap: 12px;
+}
+
+@media (max-width: 720px) {
+  .card {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    justify-content: stretch;
+  }
+  .kanjiSlot {
+    width: 220px;
+    margin: 0 auto;
+  }
+}
