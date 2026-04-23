@@ -1,7 +1,5 @@
 .page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 24px;
+  padding: 20px 40px 24px;
   min-height: 100%;
   display: flex;
   flex-direction: column;
@@ -9,28 +7,23 @@
 
 .quiz {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 32px;
-  align-items: start;
+  grid-template-rows: auto 1fr auto;
+  gap: 18px;
   flex: 1;
 }
 
 .main {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
+  align-items: center;
+  justify-content: center;
 }
 
-.actions {
+.bottom {
   display: flex;
+  justify-content: center;
   gap: 14px;
   align-items: center;
   flex-wrap: wrap;
-}
-
-.sidebarQuit {
-  margin-top: 6px;
-  align-self: flex-start;
 }
 
 .status {
@@ -51,13 +44,9 @@
 
 @media (max-width: 720px) {
   .page {
-    padding: 20px 12px;
+    padding: 16px 16px 20px;
   }
   .quiz {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .actions {
-    justify-content: center;
+    gap: 14px;
   }
 }

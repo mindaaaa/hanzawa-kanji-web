@@ -21,12 +21,15 @@ export default function QuestionCard({
   selectedAnswer,
   handleAnswerClick,
   isCorrect,
+  kanjiAdornment,
 }) {
   const isRevealed = isCorrect !== null;
 
   return (
     <div className={styles.card}>
       <div className={styles.kanjiSlot}>
+        {kanjiAdornment}
+        <div className={styles.kanjiCard}>
         <KanjiCard
           key={currentQuiz.id}
           kanji={currentQuiz}
@@ -59,6 +62,7 @@ export default function QuestionCard({
             </>
           }
         />
+        </div>
       </div>
 
       <div className={styles.choices} role='radiogroup' aria-label='보기'>

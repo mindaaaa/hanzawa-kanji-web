@@ -1,14 +1,21 @@
 .card {
   display: grid;
-  grid-template-columns: 240px 400px;
+  grid-template-columns: auto 400px;
   gap: 40px;
   justify-content: center;
-  align-items: start;
+  align-items: center;
 }
 
 .kanjiSlot {
-  width: 240px;
-  max-width: 100%;
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+.kanjiCard {
+  width: 280px;
+  flex: 0 0 280px;
 }
 
 .choices {
@@ -23,7 +30,10 @@
     justify-content: stretch;
   }
   .kanjiSlot {
+    justify-content: center;
+  }
+  .kanjiCard {
     width: 220px;
-    margin: 0 auto;
+    flex: 0 0 220px;
   }
 }

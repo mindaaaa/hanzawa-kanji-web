@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import QuestionCard from '../components/QuestionCard.jsx';
-import QuizSidebar from '../components/QuizSidebar.jsx';
+import QuizMeta from '../components/QuizMeta.jsx';
+import QuizMeter from '../components/QuizMeter.jsx';
 import ResultSummary from '../components/ResultSummary.jsx';
 import Button from '../ui/Button.jsx';
 import Warn from '../ui/Warn.jsx';
@@ -68,26 +69,14 @@ export default function InfiniteMode() {
     return <div className={styles.status}>⚠️ 문제를 불러오지 못했어요</div>;
   }
 
-  const current = quizIndex + 1;
-  const isCorrectNow = flipped && isCorrect === true;
+  const accuracy = answeredCount > 0 ? (correctCount / answeredCount) * 100 : 0;
 
   return (
     <div className={styles.page}>
       <div className={styles.quiz}>
-        <QuizSidebar
-          variant='infinite'
-          title={isCorrectNow ? '✦ 정답!' : '∞ 무한 모드'}
-          current={current}
-          highlight={isCorrectNow}
-        >
-          <span>풀어본 문제 {answeredCount}개</span>
-          <span>맞은 문제 {correctCount}개</span>
-          <div className={styles.sidebarQuit}>
-            <Button variant='ghost' onClick={handleEndQuiz}>
-              ✕ 그만하기
-            </Button>
-          </div>
-        </QuizSidebar>
+        <QuizMeta badge='∞ 무한 모드' onQuit={handleEndQuiz}>
+          풀어본 <b>{answeredCount}</b> · 맞은 <b>{correctCount}</b>
+        </QuizMeta>
 
         <div className={styles.main}>
           <QuestionCard
@@ -97,21 +86,22 @@ export default function InfiniteMode() {
             selectedAnswer={selectedAnswer}
             handleAnswerClick={handleAnswerClick}
             isCorrect={isCorrect}
+            kanjiAdornment={<QuizMeter value={accuracy} label='정답률' />}
           />
+        </div>
 
-          <div className={styles.actions}>
-            {!flipped && (
-              <Button variant='primary' onClick={handleShowAnswer}>
-                정답 보기 ✦
-              </Button>
-            )}
-            {flipped && (
-              <Button variant='yellow' onClick={handleNext}>
-                다음 문제 →
-              </Button>
-            )}
-            {alertVisible && <Warn>보기를 먼저 골라줘!</Warn>}
-          </div>
+        <div className={styles.bottom}>
+          {!flipped && (
+            <Button variant='primary' onClick={handleShowAnswer}>
+              정답 보기 ✦
+            </Button>
+          )}
+          {flipped && (
+            <Button variant='yellow' onClick={handleNext}>
+              다음 문제 →
+            </Button>
+          )}
+          {alertVisible && <Warn>보기를 먼저 골라줘!</Warn>}
         </div>
       </div>
     </div>
