@@ -37,15 +37,7 @@ export default function QuestionCard({
           variant='coral'
           backContent={
             <>
-              <div
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: '28px',
-                  color: 'var(--cobalt)',
-                  textAlign: 'center',
-                  marginBottom: '14px',
-                }}
-              >
+              <div className={styles.backMeaning}>
                 {currentQuiz.korean.map((item, i) => (
                   <div key={i}>
                     {item.kun} {item.on}
