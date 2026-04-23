@@ -24,7 +24,7 @@ const preview = {
   decorators: [
     (Story, { parameters }) => (
       <MemoryRouter initialEntries={[parameters.route ?? '/']}>
-        <Story />
+        {Story()}
       </MemoryRouter>
     ),
   ],
