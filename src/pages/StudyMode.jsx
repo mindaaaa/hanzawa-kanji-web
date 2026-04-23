@@ -25,19 +25,14 @@ export function StudyModeView({
   return (
     <div className={styles.study}>
       <header className={styles.head}>
-        <div>
-          <h1 className={styles.title}>
-            상용한자<br />
-            <em>전부</em>, 쭉.
-          </h1>
-          <p className={styles.sub}>
-            2,136자를 한 번에 훑어볼 수 있어요. 스크롤로 이어지고, 한자를 누르면 뜻과 읽기가 펼쳐집니다.
-          </p>
-        </div>
-        <div className={styles.count} aria-label={`로드된 개수 ${items.length}자`}>
-          {String(items.length).padStart(4, '0')} / {TOTAL_KANJI}
-          <small>ここまで</small>
-        </div>
+        <h1 className={styles.title}>
+          상용한자<br />
+          <em>전부</em>, 쭉.
+        </h1>
+        <p className={styles.sub}>
+          2,136자를 한 번에 훑어볼 수 있어요.<br />
+          스크롤로 이어지고, 한자를 누르면 뜻과 읽기가 펼쳐집니다.
+        </p>
       </header>
 
       <div className={styles.filters} role='toolbar' aria-label='정렬'>
