@@ -1,0 +1,88 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 24px;
+  background: var(--coral);
+  color: var(--paper);
+  border-bottom: var(--border);
+}
+
+/* 좌측: 로고 배지 */
+.logo {
+  display: inline-block;
+  background: var(--marigold);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1;
+  padding: 6px 14px;
+  border: var(--border-thin);
+  box-shadow: var(--shadow-xs);
+  transform: rotate(-2deg);
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.logo:hover {
+  transform: rotate(-2deg) translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+/* 우측: 네비게이션 */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.link {
+  padding: 8px 14px;
+  color: var(--paper);
+  text-decoration: none;
+  border: var(--border-thin);
+  border-color: transparent;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.link:hover {
+  border-color: var(--ink);
+  background: rgba(26, 26, 26, 0.15);
+}
+
+.linkActive {
+  background: var(--marigold);
+  color: var(--ink);
+  border-color: var(--ink);
+  box-shadow: var(--shadow-xs);
+}
+
+.linkActive:hover {
+  background: var(--marigold);
+  color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .topbar {
+    padding: 8px 12px;
+  }
+  .logo {
+    font-size: 18px;
+    padding: 5px 10px;
+  }
+  .nav {
+    font-size: 11px;
+    gap: 2px;
+  }
+  .link {
+    padding: 6px 8px;
+  }
+}

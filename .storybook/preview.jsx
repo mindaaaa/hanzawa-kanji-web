@@ -1,3 +1,4 @@
+import { MemoryRouter } from 'react-router-dom';
 import '../src/styles/fonts.css';
 import '../src/styles/tokens.css';
 import '../src/styles/global.css';
@@ -20,6 +21,13 @@ const preview = {
       },
     },
   },
+  decorators: [
+    (Story, { parameters }) => (
+      <MemoryRouter initialEntries={[parameters.route ?? '/']}>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 };
 
 export default preview;
