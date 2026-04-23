@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CountSelect from '../components/CountSelect.jsx';
 import ResultSummary from '../components/ResultSummary.jsx';
 import QuestionCard from '../components/QuestionCard.jsx';
@@ -10,6 +11,7 @@ import useQuizEngine from '../shared/hooks/useQuizEngine.js';
 import styles from './LimitedMode.module.css';
 
 export default function LimitedMode() {
+  const navigate = useNavigate();
   const [quizLimit, setQuizLimit] = useState(null);
   const {
     loading,
@@ -64,7 +66,8 @@ export default function LimitedMode() {
         <ResultSummary
           total={quizList.length}
           correct={correctCount}
-          onRestart={() => window.location.reload()}
+          onHome={() => navigate('/')}
+          onRetry={() => navigate(0)}
         />
       </div>
     );

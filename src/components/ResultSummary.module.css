@@ -1,0 +1,129 @@
+.wrap {
+  position: relative;
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 60px 40px 40px;
+  background: var(--marigold);
+  border: var(--border);
+  box-shadow: 10px 10px 0 var(--cobalt);
+  text-align: center;
+}
+
+.badge {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  background: var(--coral);
+  color: var(--paper);
+  padding: 6px 22px;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 24px;
+  border: var(--border);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.score {
+  font-family: var(--font-display);
+  font-size: clamp(120px, 18vw, 200px);
+  line-height: 0.85;
+  color: var(--cobalt);
+  letter-spacing: -0.04em;
+  margin: 8px 0 0;
+}
+
+.slash {
+  color: var(--coral);
+  margin: 0 0.02em;
+}
+
+.total {
+  color: var(--ink);
+  font-size: 0.55em;
+}
+
+.percent {
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: clamp(32px, 5vw, 44px);
+  color: var(--coral);
+  display: inline-block;
+  transform: rotate(-2deg);
+  margin: 12px 0 32px;
+}
+
+.meta {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 0 0 32px;
+  flex-wrap: wrap;
+}
+
+.cell {
+  padding: 14px 22px;
+  background: var(--paper-hi);
+  border: var(--border);
+  box-shadow: var(--shadow-sm);
+  min-width: 108px;
+}
+
+.cellLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.cellValue {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 400;
+  color: var(--cobalt);
+  line-height: 1;
+}
+
+.cell:nth-child(2) .cellValue {
+  color: var(--coral);
+}
+
+.cell:nth-child(3) .cellValue {
+  color: var(--ink);
+}
+
+.message {
+  font-family: var(--font-ko);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 460px;
+  margin: 0 auto 32px;
+}
+
+.actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .wrap {
+    margin: 32px 16px;
+    padding: 48px 24px 32px;
+    box-shadow: 6px 6px 0 var(--cobalt);
+  }
+  .cell {
+    min-width: 92px;
+    padding: 12px 16px;
+  }
+  .cellValue {
+    font-size: 28px;
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import QuestionCard from '../components/QuestionCard.jsx';
 import QuizMeta from '../components/QuizMeta.jsx';
 import QuizMeter from '../components/QuizMeter.jsx';
@@ -9,6 +10,7 @@ import useQuizEngine from '../shared/hooks/useQuizEngine.js';
 import styles from './InfiniteMode.module.css';
 
 export default function InfiniteMode() {
+  const navigate = useNavigate();
   const {
     loading,
     error,
@@ -59,7 +61,8 @@ export default function InfiniteMode() {
         <ResultSummary
           total={answeredCount}
           correct={correctCount}
-          onRestart={() => window.location.reload()}
+          onHome={() => navigate('/')}
+          onRetry={() => navigate(0)}
         />
       </div>
     );
