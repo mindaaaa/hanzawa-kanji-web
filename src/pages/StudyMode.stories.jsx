@@ -1,5 +1,6 @@
 import { StudyModeView } from './StudyMode.jsx';
 import mockKanji from '../data/mockKanji.json';
+import { shuffle } from '../utils/shuffle.js';
 
 export default {
   title: 'Pages/StudyMode',
@@ -8,9 +9,14 @@ export default {
   parameters: { layout: 'fullscreen' },
 };
 
+const loaded120 = mockKanji.slice(0, 120);
+const loading40 = mockKanji.slice(0, 40);
+const all300 = mockKanji.slice(0, 300);
+
 export const Loaded = {
   args: {
-    items: mockKanji.slice(0, 120),
+    items: loaded120,
+    displayItems: loaded120,
     loading: false,
     hasMore: true,
     onLoadMore: () => console.log('load more'),
@@ -21,7 +27,8 @@ export const Loaded = {
 
 export const Loading = {
   args: {
-    items: mockKanji.slice(0, 40),
+    items: loading40,
+    displayItems: loading40,
     loading: true,
     hasMore: true,
     onLoadMore: () => {},
@@ -32,7 +39,8 @@ export const Loading = {
 
 export const AllLoaded = {
   args: {
-    items: mockKanji.slice(0, 300),
+    items: all300,
+    displayItems: all300,
     loading: false,
     hasMore: false,
     onLoadMore: () => {},
@@ -43,7 +51,8 @@ export const AllLoaded = {
 
 export const RandomSort = {
   args: {
-    items: mockKanji.slice(0, 120),
+    items: loaded120,
+    displayItems: shuffle(loaded120),
     loading: false,
     hasMore: true,
     onLoadMore: () => {},

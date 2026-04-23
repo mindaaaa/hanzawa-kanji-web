@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import LibraryGrid from '../components/LibraryGrid.jsx';
 import Pill from '../ui/Pill.jsx';
 import useDocumentTitle from '../shared/hooks/useDocumentTitle.js';
@@ -10,17 +10,13 @@ const TOTAL_KANJI = 2136;
 
 export function StudyModeView({
   items,
+  displayItems,
   loading,
   hasMore,
   onLoadMore,
   sort,
   onSortChange,
 }) {
-  const displayItems = useMemo(() => {
-    if (sort === 'random') return shuffle(items);
-    return items;
-  }, [items, sort]);
-
   const remaining = hasMore ? TOTAL_KANJI - items.length : 0;
 
   return (
@@ -67,11 +63,32 @@ export function StudyModeView({
 export default function StudyMode() {
   useDocumentTitle('공부 모드 · 한자와칸지');
   const [items, setItems] = useState([]);
+  const [randomItems, setRandomItems] = useState([]);
   const [cursor, setCursor] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [sort, setSort] = useState('id');
   const loadingRef = useRef(false);
+
+  useEffect(() => {
+    if (sort !== 'random') {
+      if (randomItems.length > 0) setRandomItems([]);
+      return;
+    }
+    if (randomItems.length === 0) {
+      if (items.length > 0) setRandomItems(shuffle(items));
+      return;
+    }
+    if (randomItems.length < items.length) {
+      const seen = new Set(randomItems.map((k) => k.id));
+      const fresh = items.filter((k) => !seen.has(k.id));
+      if (fresh.length > 0) {
+        setRandomItems((prev) => [...prev, ...shuffle(fresh)]);
+      }
+    }
+  }, [items, sort, randomItems]);
+
+  const displayItems = sort === 'random' ? randomItems : items;
 
   const fetchMore = useCallback(async () => {
     if (loadingRef.current || !hasMore) return;
@@ -106,6 +123,7 @@ export default function StudyMode() {
   return (
     <StudyModeView
       items={items}
+      displayItems={displayItems}
       loading={loading}
       hasMore={hasMore}
       onLoadMore={fetchMore}
