@@ -35,4 +35,7 @@
 
   /* ── a11y ── */
   --focus-ring: 3px solid var(--cobalt);
+
+  /* ── layout ── */
+  --topbar-height: 60px;
 }
