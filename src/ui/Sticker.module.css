@@ -1,0 +1,23 @@
+.sticker {
+  display: inline-block;
+  padding: 8px 14px;
+  background: var(--coral);
+  color: var(--paper);
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+  border: var(--border-thin);
+  box-shadow: var(--shadow-xs);
+  transform: rotate(-6deg);
+}
+
+.yellow {
+  background: var(--marigold);
+  color: var(--ink);
+}
+
+.blue {
+  background: var(--cobalt);
+  color: var(--paper);
+}

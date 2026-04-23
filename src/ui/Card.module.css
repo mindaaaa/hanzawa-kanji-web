@@ -1,0 +1,47 @@
+.card {
+  border: var(--border);
+  background: var(--paper-hi);
+  box-shadow: var(--shadow-lg);
+  padding: 24px;
+  position: relative;
+  color: var(--ink);
+}
+
+.paper {
+  background: var(--paper-hi);
+}
+
+.blue {
+  background: var(--cobalt);
+  color: var(--paper);
+}
+
+.yellow {
+  background: var(--marigold);
+  color: var(--ink);
+}
+
+.coral {
+  background: var(--coral);
+  color: var(--paper);
+}
+
+.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.shadow-xl {
+  box-shadow: var(--shadow-xl);
+}
+
+.shadow-accent {
+  box-shadow: var(--shadow-accent);
+}
