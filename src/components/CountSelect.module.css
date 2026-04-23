@@ -1,0 +1,140 @@
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  min-height: calc(100dvh - var(--topbar-height));
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+/* ── 좌측 프로즈 ── */
+.title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(54px, 7vw, 80px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--coral);
+  text-decoration: underline wavy var(--cobalt);
+  text-underline-offset: 8px;
+}
+
+.marker {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--coral);
+  transform: rotate(-2deg);
+}
+
+.note {
+  font-family: var(--font-ko);
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 420px;
+  margin: 20px 0 0;
+}
+
+/* ── 우측 옵션 ── */
+.opts {
+  display: grid;
+  gap: 14px;
+}
+
+.opt {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  background: var(--paper-hi);
+  border: var(--border);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  color: var(--ink);
+  text-align: left;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.opt:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--ink);
+}
+
+.opt:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.active {
+  background: var(--marigold);
+  transform: rotate(-1deg);
+  box-shadow: var(--shadow-accent);
+}
+
+.active:hover {
+  transform: rotate(-1deg) translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--coral);
+}
+
+.big {
+  font-family: var(--font-display);
+  font-size: 72px;
+  line-height: 1;
+  color: var(--cobalt);
+  letter-spacing: -0.04em;
+}
+
+.active .big {
+  color: var(--ink);
+}
+
+.head {
+  display: block;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--coral);
+  line-height: 1.1;
+}
+
+.sub {
+  display: block;
+  font-family: var(--font-ko);
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+@media (max-width: 860px) {
+  .wrap {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    min-height: auto;
+    padding: 24px 16px 32px;
+  }
+  .title {
+    font-size: clamp(40px, 10vw, 60px);
+  }
+  .opt {
+    grid-template-columns: 70px 1fr;
+    padding: 16px 20px;
+    gap: 16px;
+  }
+  .big {
+    font-size: 56px;
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ChoiceButtons from '../components/ChoiceButtons.jsx';
+import CountSelect from '../components/CountSelect.jsx';
 import ResultSummary from '../components/ResultSummary.jsx';
 import QuestionCard from '../components/QuestionCard.jsx';
 import useQuizEngine from '../shared/hooks/useQuizEngine.js';
@@ -40,14 +40,7 @@ export default function LimitedMode() {
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {!quizLimit && (
-        <>
-          <h3>문제 수를 선택하세요!</h3>
-          <ChoiceButtons
-            options={[10, 20, 30]}
-            selected={quizLimit}
-            onSelect={(value) => setQuizLimit(value)}
-          />
-        </>
+        <CountSelect selected={quizLimit} onSelect={setQuizLimit} />
       )}
 
       {quizLimit && currentQuiz && (
