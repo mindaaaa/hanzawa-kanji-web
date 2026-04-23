@@ -3,7 +3,7 @@
 ![Hanzawa-Kanji 배너 — 상용 한자, 배로 갚아준다](docs/hero.png)
 
 <h1>
-  <img src="https://readme-typing-svg.demolab.com?font=Gowun+Dodum&weight=700&size=18&color=E2513C&center=true&vCenter=true&width=720&height=60&duration=2800&pause=800&lines=한자와+칸지;外れた漢字は、必ず;倍にして+返します。" alt="Hanzawa-Kanji" />
+  <img src="https://readme-typing-svg.demolab.com?font=Gowun+Dodum&weight=700&size=32&color=E2513C&center=true&vCenter=true&width=720&height=60&duration=2800&pause=800&lines=%ED%95%9C%EC%9E%90%EC%99%80+%EC%B9%B8%EC%A7%80;%E5%A4%96%E3%82%8C%E3%81%9F%E6%BC%A2%E5%AD%97%E3%81%AF%E3%80%81%E5%BF%85%E3%81%9A;%E5%80%8D%E3%81%AB%E3%81%97%E3%81%A6+%E8%BF%94%E3%81%97%E3%81%BE%E3%81%99%E3%80%82" alt="Hanzawa-Kanji" />
 </h1>
 
 <p>
@@ -43,8 +43,7 @@
 
 <div align="center">
 
-<!-- TODO: GIF 또는 영상 링크 -->
-<img src="https://via.placeholder.com/800x450/1a1a1a/e2513c?text=Demo+GIF+추가+예정" alt="Demo" width="800" />
+<img width="1280" height="720" alt="demo" src="https://github.com/user-attachments/assets/47e0ea06-1c15-43ba-99ce-e1e60217e839" />
 
 </div>
 
@@ -53,6 +52,8 @@
 ---
 
 ## 💻 주요 기능
+
+<div align="center">
 
 <table>
 <tr>
@@ -83,6 +84,7 @@
 <tr>
 <td width="50%" valign="top">
 
+
 ### 가상 스크롤
 
 한자 카드 리스트에 `react-window`를 사용해 <br /> **2,000+ 개의 카드**를 렌더링해도 60fps를 유지합니다.
@@ -94,13 +96,14 @@
 
 API 서버 없이 **단독 실행** 가능.
 
-```env
-VITE_USE_MOCK=true
-```
+> VITE_USE_MOCK=true
 
 </td>
 </tr>
 </table>
+
+</div>
+
 
 <br />
 
@@ -135,15 +138,15 @@ VITE_USE_MOCK=true
 
 ## 🏛️ 아키텍처
 
+> [!TIP] 
+> [`useQuizEngine`](src/shared/hooks/useQuizEngine.js)이 모드 분기 · 보기 풀 보충 · 정답 판정을 모두 담당합니다.
+
 <div align="center">
 
 ![Hanzawa-Kanji 앱 아키텍처](docs/architecture.svg)
 
 </div>
 
-> [!TIP]
-> **핵심 훅**, [`useQuizEngine`](src/shared/hooks/useQuizEngine.js)이 <br />
-> 모드 분기 · 보기 풀 보충 · 정답 판정을 모두 담당합니다.
 
 <br />
 
@@ -151,21 +154,21 @@ VITE_USE_MOCK=true
 
 ## 🚀 실행 방법
 
-### 요구사항
+### ① 요구사항
 
 - **Node.js 20+**
 - (선택) 백엔드 서버
   - [`hanzawakanji-api`](https://github.com/mindaaaa/hanzawa-kanji-api) 참고.
   - _Mock 모드로만 돌릴 거면 불필요._
 
-### 개발 서버
+### ② 개발 서버
 
 ```bash
 npm install
 npm run dev
 ```
 
-### 환경 변수
+### ③ 환경 변수
 
 프로젝트 루트에 `.env.local` 파일을 만드세요.
 
@@ -178,14 +181,14 @@ VITE_USE_MOCK=true
 > [!TIP]
 > API 엔드포인트 base URL은 [`src/shared/constants/index.js`](src/shared/constants/index.js)의 `BASE_API`에서 관리합니다.
 
-### 빌드
+### ④ 빌드
 
 ```bash
 npm run build
 npm run preview
 ```
 
-### Storybook
+### ⑤ Storybook
 
 컴포넌트 단위로 격리된 뷰를 확인하거나 개발할 때 사용합니다.
 
@@ -224,7 +227,7 @@ src/
 <tr>
 <td align="center" width="50%">
 
-### Frontend (현재 저장소)
+### 🎨 Frontend (현재 저장소)
 
 **React + Vite**
 <br /><sub>상용한자 퀴즈 웹앱</sub>
@@ -232,7 +235,7 @@ src/
 </td>
 <td align="center" width="50%">
 
-### [Backend API](https://github.com/mindaaaa/hanzawa-kanji-api)
+### [⚙️ Backend API](https://github.com/mindaaaa/hanzawa-kanji-api)
 
 **Kotlin + Spring Boot**
 <br /><sub>한자 데이터 & 퀴즈 서빙</sub>
