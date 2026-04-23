@@ -1,0 +1,43 @@
+{
+  "name": "상용한자 학습 · 한자와칸지",
+  "short_name": "한자와칸지",
+  "description": "상용한자 2,136자를 매일 조금씩 — 훈·음 객관식 퀴즈 앱",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5ecd4",
+  "theme_color": "#e2513c",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/favicon/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/favicon/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon/icon-maskable-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon/icon-maskable-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "books"]
+}

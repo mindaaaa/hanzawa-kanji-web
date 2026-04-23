@@ -1,34 +1,88 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import QuestionCard from '../components/QuestionCard.jsx';
+import QuizMeta from '../components/QuizMeta.jsx';
+import QuizMeter from '../components/QuizMeter.jsx';
 import ResultSummary from '../components/ResultSummary.jsx';
+import Button from '../ui/Button.jsx';
+import Warn from '../ui/Warn.jsx';
+import useDocumentTitle from '../shared/hooks/useDocumentTitle.js';
 import useQuizEngine from '../shared/hooks/useQuizEngine.js';
+import styles from './InfiniteMode.module.css';
+
+export function InfiniteModeView({
+  currentQuiz,
+  allChoices,
+  selectedAnswer,
+  isCorrect,
+  flipped,
+  alertVisible,
+  correctCount,
+  answeredCount,
+  handleAnswerClick,
+  handleShowAnswer,
+  handleNext,
+  handleEndQuiz,
+}) {
+  const accuracy = answeredCount > 0 ? (correctCount / answeredCount) * 100 : 0;
+
+  return (
+    <div className={styles.page}>
+      <div className={styles.quiz}>
+        <QuizMeta badge='∞ 무한 모드' onQuit={handleEndQuiz}>
+          풀어본 <b>{answeredCount}</b> · 맞은 <b>{correctCount}</b>
+        </QuizMeta>
+
+        <div className={styles.main}>
+          <QuestionCard
+            currentQuiz={currentQuiz}
+            allChoices={allChoices}
+            flipped={flipped}
+            selectedAnswer={selectedAnswer}
+            handleAnswerClick={handleAnswerClick}
+            isCorrect={isCorrect}
+            kanjiAdornment={<QuizMeter value={accuracy} label='정답률' />}
+          />
+        </div>
+
+        <div className={styles.bottom}>
+          {!flipped && (
+            <Button variant='primary' onClick={handleShowAnswer}>
+              정답 보기 ✦
+            </Button>
+          )}
+          {flipped && (
+            <Button variant='yellow' onClick={handleNext}>
+              다음 문제 →
+            </Button>
+          )}
+          {alertVisible && <Warn>보기를 먼저 골라줘!</Warn>}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function InfiniteMode() {
+  useDocumentTitle('무한 모드 · 한자와칸지');
+  const navigate = useNavigate();
+  const engine = useQuizEngine({ mode: 'INFINITE' });
   const {
     loading,
     error,
     quizList,
     quizIndex,
     currentQuiz,
-    allChoices,
-    selectedAnswer,
-    isCorrect,
-    flipped,
     isEnded,
-    alertVisible,
     correctCount,
     answeredCount,
     isQuizFinished,
-    handleAnswerClick,
-    handleShowAnswer,
-    handleEndQuiz,
-    handleNext,
     fetchQuiz,
-  } = useQuizEngine({ mode: 'INFINITE' });
+  } = engine;
 
-  // TODO: 이 부분에서 중복 id가 들어오는지 확인
   useEffect(() => {
     fetchQuiz();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -37,72 +91,33 @@ export default function InfiniteMode() {
     if (shouldPrefetchMore) {
       fetchQuiz();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizIndex, quizList]);
 
-  return (
-    <div style={{ textAlign: 'center', padding: '2rem' }}>
-      {loading && <p>🐢 로딩 중...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {!loading && currentQuiz && (
-        <>
-          <h2>무한 퀴즈 모드 ♾️</h2>
+  if (loading && quizList.length === 0) {
+    return <div className={styles.status}>문제 불러오는 중...</div>;
+  }
 
-          <QuestionCard
-            currentQuiz={currentQuiz}
-            allChoices={allChoices}
-            flipped={flipped}
-            selectedAnswer={selectedAnswer}
-            handleAnswerClick={handleAnswerClick}
-            isCorrect={isCorrect}
-          />
+  if (error) {
+    return <div className={styles.error}>{error}</div>;
+  }
 
-          <div style={{ marginTop: '1rem' }}>
-            <button onClick={handleShowAnswer}>정답 보기</button>
-            {alertVisible && (
-              <div style={{ color: 'red', marginTop: '1rem' }}>
-                ⚠️ 먼저 보기를 선택해주세요!
-              </div>
-            )}
-          </div>
-
-          <div style={{ marginTop: '1rem' }}>
-            <button
-              onClick={handleNext}
-              disabled={!flipped}
-              style={{
-                opacity: !flipped ? 0.5 : 1,
-                cursor: !flipped ? 'not-allowed' : 'pointer',
-              }}
-            >
-              다음 문제
-            </button>
-          </div>
-        </>
-      )}
-
-      <button
-        onClick={handleEndQuiz}
-        style={{
-          position: 'absolute',
-          top: '1rem',
-          right: '1rem',
-          fontSize: '0.9rem',
-          padding: '0.4rem 0.8rem',
-          backgroundColor: '#f5f5f5',
-          border: '1px solid #ccc',
-          borderRadius: '4px',
-          cursor: 'pointer',
-        }}
-      >
-        그만하기
-      </button>
-      {(isQuizFinished || isEnded) && (
+  if (isQuizFinished || isEnded) {
+    return (
+      <div className={styles.page}>
         <ResultSummary
           total={answeredCount}
           correct={correctCount}
-          onRestart={() => window.location.reload()}
+          onHome={() => navigate('/')}
+          onRetry={() => navigate(0)}
         />
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+
+  if (!currentQuiz) {
+    return <div className={styles.status}>⚠️ 문제를 불러오지 못했어요</div>;
+  }
+
+  return <InfiniteModeView {...engine} />;
 }

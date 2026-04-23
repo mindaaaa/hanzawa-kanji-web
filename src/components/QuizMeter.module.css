@@ -1,0 +1,51 @@
+.meter {
+  --fill: var(--coral);
+  width: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mid {
+  --fill: var(--marigold);
+}
+
+.high {
+  --fill: var(--teal);
+}
+
+.pct {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1;
+  color: var(--fill);
+  transition: color 0.4s;
+}
+
+.track {
+  flex: 1;
+  width: 16px;
+  background: var(--paper-shade);
+  border: var(--border-thin);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.fill {
+  width: 100%;
+  background: var(--fill);
+  border-top: var(--border-thin);
+  transition: height 0.4s ease-out, background 0.4s;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+}

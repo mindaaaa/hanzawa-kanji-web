@@ -1,6 +1,11 @@
 import { buildApiUrl } from '../../utils/queryHelpers.js';
+import { mockFetchQuizItems } from './mock/mockFetchers.js';
 
 export async function fetchQuizItems({ quizId, mode, limit, cursor }) {
+  if (import.meta.env.VITE_USE_MOCK === 'true') {
+    return mockFetchQuizItems({ mode, limit, cursor });
+  }
+
   const url = buildApiUrl({
     quizId,
     mode,

@@ -1,0 +1,51 @@
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.badge {
+  background: var(--coral);
+  color: var(--paper);
+  padding: 4px 12px;
+  border: var(--border-thin);
+  font-family: var(--font-display);
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.stats {
+  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-size: 13px;
+}
+
+.stats b {
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.quit {
+  background: transparent;
+  border: 1px dashed var(--ink-soft);
+  padding: 5px 12px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.quit:hover {
+  color: var(--coral);
+  border-color: var(--coral);
+}

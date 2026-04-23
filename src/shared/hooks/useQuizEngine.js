@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { fetchQuizItems } from '../api/fetchQuizItems.js';
 import { shuffle } from '../../utils/shuffle.js';
 import { Choice, Mode } from '../constants/index.js';
@@ -166,6 +166,7 @@ export default function useQuizEngine({ mode = Mode.LIMITED, quizLimit }) {
       };
       fetchMore();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answeredCount, loading, choicePool]);
 
   return {

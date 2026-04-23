@@ -1,0 +1,29 @@
+.pill {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  padding: 8px 14px;
+  background: var(--paper);
+  color: var(--ink);
+  border: var(--border-thin);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.pill:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.on {
+  background: var(--cobalt);
+  color: var(--paper);
+  box-shadow: var(--shadow-accent);
+  transform: translate(-1px, -1px);
+}
+
+.on:hover:not(:disabled) {
+  box-shadow: var(--shadow-accent);
+}

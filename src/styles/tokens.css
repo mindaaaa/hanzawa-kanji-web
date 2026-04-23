@@ -1,0 +1,41 @@
+:root {
+  /* ── riso palette ── */
+  --paper: #f5ecd4;
+  --paper-hi: #fbf5e1;
+  --paper-shade: #e8dcbb;
+  --ink: #1a1a1a;
+  --ink-soft: #3b3833;
+  --ink-line: #2b2822;
+  --cobalt: #1e46d4;
+  --cobalt-hi: #2c58ee;
+  --marigold: #f2b83a;
+  --coral: #e2513c;
+  --coral-hi: #ef6e52;
+  --teal: #1d887e;
+
+  /* ── typography ── */
+  --font-display: 'Gloock', serif;
+  --font-body: 'Rubik', 'Gowun Dodum', sans-serif;
+  --font-hand: 'Caveat', cursive;
+  --font-ko: 'Gowun Dodum', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+
+  /* ── hard-offset shadows ── */
+  --shadow-xs: 3px 3px 0 var(--ink);
+  --shadow-sm: 4px 4px 0 var(--ink);
+  --shadow-md: 5px 5px 0 var(--ink);
+  --shadow-lg: 6px 6px 0 var(--ink);
+  --shadow-xl: 8px 8px 0 var(--ink);
+  --shadow-accent: 5px 5px 0 var(--coral);
+
+  /* ── borders ── */
+  --border-width: 3px;
+  --border: var(--border-width) solid var(--ink);
+  --border-thin: 2px solid var(--ink);
+
+  /* ── a11y ── */
+  --focus-ring: 3px solid var(--cobalt);
+
+  /* ── layout ── */
+  --topbar-height: 60px;
+}
