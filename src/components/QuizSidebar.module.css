@@ -1,0 +1,127 @@
+.sidebar {
+  padding: 26px 28px;
+  border: var(--border);
+  box-shadow: var(--shadow-lg);
+  background: var(--cobalt);
+  color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+
+/* ── variants ── */
+.infinite {
+  background: var(--coral);
+  color: var(--paper);
+}
+
+.highlight {
+  background: var(--marigold);
+  color: var(--ink);
+}
+
+/* ── title badge ── */
+.title {
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--marigold);
+  align-self: flex-start;
+  transform: rotate(-2deg);
+}
+
+.highlight .title {
+  color: var(--coral);
+}
+
+.infinite .title {
+  color: var(--marigold);
+}
+
+/* ── big counter ── */
+.counter {
+  font-family: var(--font-display);
+  font-size: 96px;
+  line-height: 0.9;
+  color: var(--marigold);
+  letter-spacing: -0.04em;
+}
+
+.highlight .counter {
+  color: var(--cobalt);
+}
+
+.infinite .counter {
+  color: var(--marigold);
+}
+
+.slash {
+  color: var(--paper);
+  opacity: 0.5;
+  margin: 0 2px;
+}
+
+.total {
+  color: var(--paper);
+  font-size: 0.55em;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+.highlight .slash,
+.highlight .total {
+  color: var(--ink);
+}
+
+/* ── progress bar ── */
+.bar {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  border: var(--border-thin);
+  position: relative;
+  overflow: hidden;
+}
+
+.highlight .bar {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  background: var(--marigold);
+  transition: width 0.3s ease-out;
+}
+
+.highlight .bar span {
+  background: var(--coral);
+}
+
+.infinite .bar span {
+  background: var(--marigold);
+}
+
+/* ── status (children) ── */
+.status {
+  font-family: var(--font-ko);
+  font-size: 14px;
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+@media (max-width: 720px) {
+  .sidebar {
+    padding: 18px 20px;
+    gap: 10px;
+  }
+  .counter {
+    font-size: 68px;
+  }
+  .title {
+    font-size: 22px;
+  }
+}
