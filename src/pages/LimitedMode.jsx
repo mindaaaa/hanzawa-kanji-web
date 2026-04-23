@@ -7,10 +7,12 @@ import QuizMeta from '../components/QuizMeta.jsx';
 import QuizMeter from '../components/QuizMeter.jsx';
 import Button from '../ui/Button.jsx';
 import Warn from '../ui/Warn.jsx';
+import useDocumentTitle from '../shared/hooks/useDocumentTitle.js';
 import useQuizEngine from '../shared/hooks/useQuizEngine.js';
 import styles from './LimitedMode.module.css';
 
 export default function LimitedMode() {
+  useDocumentTitle('유한 모드 · 한자와칸지');
   const navigate = useNavigate();
   const [quizLimit, setQuizLimit] = useState(null);
   const {

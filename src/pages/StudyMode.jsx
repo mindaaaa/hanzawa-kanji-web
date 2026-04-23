@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import LibraryGrid from '../components/LibraryGrid.jsx';
 import Pill from '../ui/Pill.jsx';
+import useDocumentTitle from '../shared/hooks/useDocumentTitle.js';
 import { fetchKanjiItems } from '../shared/api/fetchKanjiItems.js';
 import { shuffle } from '../utils/shuffle.js';
 import styles from './StudyMode.module.css';
@@ -64,6 +65,7 @@ export function StudyModeView({
 }
 
 export default function StudyMode() {
+  useDocumentTitle('공부 모드 · 한자와칸지');
   const [items, setItems] = useState([]);
   const [cursor, setCursor] = useState(undefined);
   const [loading, setLoading] = useState(false);

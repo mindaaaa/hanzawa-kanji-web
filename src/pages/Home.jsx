@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import useDocumentTitle from '../shared/hooks/useDocumentTitle.js';
 import styles from './Home.module.css';
 
 const MODES = [
@@ -32,6 +33,7 @@ const colorClass = {
 };
 
 function Home() {
+  useDocumentTitle('상용한자 학습 · 한자와칸지');
   return (
     <div className={styles.home}>
       <div className={styles.grid}>
